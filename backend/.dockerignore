@@ -15,7 +15,6 @@ build/
 # Documentación y config locales
 .env
 docker-compose.yml
-flyway.conf
 
 # Scripts de Windows / helper local
 gradlew.bat
