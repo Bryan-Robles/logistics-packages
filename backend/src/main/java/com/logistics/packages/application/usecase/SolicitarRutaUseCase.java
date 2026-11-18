@@ -23,6 +23,12 @@ public class SolicitarRutaUseCase {
         Paquete paquete = paqueteRepository.findById(event.getPaqueteId())
                 .orElseThrow(() -> new PaqueteNotFoundException(event.getPaqueteId()));
 
+        // UC-001: solicitar_ruta queda bloqueado hasta resolver las coordenadas (GPS PENDIENTE)
+        if (paquete.getCoordenadas() == null) {
+            log.warn("Paquete {} sin coordenadas (GPS pendiente): no se solicita ruta todavía", paquete.getId());
+            return;
+        }
+
         log.info("Enviando solicitud de ruta para paquete {} con peso {}kg, volumen {}m3",
                 paquete.getId(),
                 paquete.getPeso() != null ? paquete.getPeso().getKilogramos() : null,

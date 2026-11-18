@@ -15,6 +15,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
@@ -45,6 +46,11 @@ public class S3ArchivoStorageAdapter implements ArchivoStoragePort {
     @Value("${spring.cloud.aws.s3.endpoint:}")
     private String s3Endpoint;
 
+    // Endpoint público opcional para las URLs devueltas al cliente (p. ej. http://localhost:4566
+    // cuando el backend corre en Docker y llega a LocalStack como "localstack:4566").
+    @Value("${aws.s3.public-endpoint:}")
+    private String s3PublicEndpoint;
+
     private S3Presigner presigner;
 
     @Override
@@ -57,7 +63,7 @@ public class S3ArchivoStorageAdapter implements ArchivoStoragePort {
 
             s3Template.upload(bucketName, nombreArchivo, archivo.getInputStream());
 
-            String url = String.format("https://%s.s3.amazonaws.com/%s", bucketName, nombreArchivo);
+            String url = construirUrl(nombreArchivo);
 
             log.info("Archivo guardado exitosamente en S3: {}", url);
             return url;
@@ -131,6 +137,16 @@ public class S3ArchivoStorageAdapter implements ArchivoStoragePort {
         return response.contents().stream()
                 .map(S3Object::key)
                 .toList();
+    }
+
+    private String construirUrl(String key) {
+        if (s3PublicEndpoint != null && !s3PublicEndpoint.isBlank()) {
+            return String.format("%s/%s/%s", s3PublicEndpoint.replaceAll("/+$", ""), bucketName, key);
+        }
+        // URL según el cliente configurado: respeta endpoint (LocalStack) y path-style
+        return s3Client.utilities()
+                .getUrl(GetUrlRequest.builder().bucket(bucketName).key(key).build())
+                .toString();
     }
 
     private S3Presigner obtenerPresigner() {

@@ -47,6 +47,8 @@ services:
       # AWS (Localstack) connection
       - SPRING_CLOUD_AWS_SQS_ENDPOINT=http://localstack:4566
       - SPRING_CLOUD_AWS_S3_ENDPOINT=http://localstack:4566
+      # URLs de evidencia accesibles desde el navegador del host
+      - AWS_S3_PUBLIC_ENDPOINT=http://localhost:4566
       - SPRING_CLOUD_AWS_CREDENTIALS_ACCESS-KEY=test
       - SPRING_CLOUD_AWS_CREDENTIALS_SECRET-KEY=test
       - SPRING_CLOUD_AWS_REGION_STATIC=us-east-1
