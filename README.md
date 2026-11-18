@@ -103,6 +103,10 @@ La integración continua corre las tres verificaciones en cada push. El flujo co
 - **Notificaciones:** los SMS están simulados (se escriben en el log) y el email requiere credenciales SMTP.
 - **Frontend:** la sede que muestra el encabezado ("Sede Central · ID 001") es fija: no se cambia según el usuario.
 
+## Contribuir
+
+Los cambios entran por ramas y Pull Requests hacia `main`, que está protegida y exige la CI en verde. Ver [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Mi aporte
 
 <!-- BORRADOR: revisar y ajustar con tu propia experiencia antes de publicar -->
