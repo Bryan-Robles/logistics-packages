@@ -65,14 +65,28 @@ npm run dev
 
 La aplicación queda en `http://localhost:3000`.
 
+Usuarios de desarrollo creados al arrancar el backend: `admin` / `admin123` y `operador` / `operador123`. Son solo para uso local.
+
+## Calidad
+
+```bash
+cd backend && ./gradlew test        # 205 tests (unitarios + integración con Testcontainers; requiere Docker)
+cd frontend && npx tsc --noEmit     # 0 errores de tipos
+cd frontend && npm run lint         # 0 errores (quedan warnings de tipado `any`)
+```
+
+Flujo verificado de punta a punta contra el stack local: login → admisión → coordenadas manuales → pesaje → almacenaje → clasificación → tracking, y reporte de novedad con evidencia.
+
 ## Alcance y limitaciones
 
 Lo que **no** quedó terminado al cierre del proyecto:
 
-- La integración real con los Módulos 2 (Rutas) y 3 (Facturación) dependía de cuentas AWS de otros equipos. En local se usa LocalStack y los eventos de esos módulos no llegan.
-- Parte de los tests del backend fallan (casos de uso de admisión, asignación de ruta y transiciones de estado). Los tests de integración requieren Docker.
-- El frontend compila, pero tiene errores de tipos de TypeScript pendientes y la protección de rutas por autenticación está incompleta.
-- La geocodificación requiere una API key de Google Maps. Sin ella se pueden ingresar coordenadas manualmente.
+- **Integración con otros módulos:** la integración real con los Módulos 2 (Rutas) y 3 (Facturación) dependía de cuentas AWS de otros equipos. En local se usa LocalStack: M1 publica sus eventos, pero los de esos módulos no llegan, así que no se asignan rutas.
+- **Geocodificación:** requiere una API key de Google Maps (`GOOGLE_MAPS_API_KEY`). Sin ella, el paquete queda con GPS `PENDIENTE` y las coordenadas se ingresan manualmente.
+- **Distancia con coordenadas manuales:** la distancia estimada no se recalcula al ingresar coordenadas manuales, así que el precio de esos paquetes usa distancia 0.
+- **URLs de evidencia:** las URLs devueltas apuntan al formato de AWS S3 real, no a LocalStack.
+- **Notificaciones:** los SMS están simulados (se registran en el log) y el email requiere credenciales SMTP.
+- **Frontend:** quedan pantallas con datos de ejemplo y algunos tipos `any` sin precisar.
 
 ## Equipo
 

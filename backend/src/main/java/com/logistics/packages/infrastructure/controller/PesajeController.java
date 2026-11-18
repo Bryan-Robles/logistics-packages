@@ -1,5 +1,8 @@
 package com.logistics.packages.infrastructure.controller;
 
+import java.util.UUID;
+import com.logistics.packages.application.ports.UsuarioRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.logistics.packages.application.ports.SedeRepository;
 import com.logistics.packages.application.usecase.PesajeCommand;
 import com.logistics.packages.application.usecase.PesajeResponse;
@@ -45,6 +48,7 @@ public class PesajeController {
     private final TarifasConfigProperties tarifasConfig;
     private final SedeRepository sedeRepository;
     private final PaqueteRepository paqueteRepository;
+    private final UsuarioRepository usuarioRepository;
 
     /**
      * Procesa el pesaje de un paquete existente.
@@ -105,6 +109,12 @@ public class PesajeController {
                  default -> recargoMercancia = java.math.BigDecimal.ZERO;
              }
              
+             // Usuario autenticado (mismo patrón que admisión, almacenaje y novedades)
+             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+             UUID usuarioId = usuarioRepository.findByUsername(username)
+                     .map(usuario -> usuario.getId())
+                     .orElse(null);
+
              PesajeCommand command = PesajeCommand.builder()
                      .paqueteId(request.getPaqueteId())
                      .peso(peso)
@@ -117,6 +127,7 @@ public class PesajeController {
                      .recargoTipoMercancia(recargoMercancia)
                      .recargoCategoriaCarga(tarifasConfig.getRecargoCargaEspecial())
                      .evidencia(evidencia)
+                     .usuarioId(usuarioId)
                      .build();
             
             // Ejecutar el caso de uso

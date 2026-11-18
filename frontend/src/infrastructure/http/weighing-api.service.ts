@@ -1,4 +1,5 @@
 import httpClient, { parseApiError } from "../api/http-client";
+import { toFormData, MULTIPART_HEADERS } from "../api/form-data";
 import type { WeighingData } from "../../domain/validators/weighing.validator";
 
 /**
@@ -59,7 +60,9 @@ export class WeighingApiService {
 
       const response = await httpClient.post<PesajeResponseDto>(
         `${this.BASE_URL}/pesaje`,
-        requestDto,
+        // Backend endpoint is multipart/form-data (@ModelAttribute + optional evidence file)
+        toFormData(requestDto),
+        { headers: MULTIPART_HEADERS },
       );
 
       return response.data;

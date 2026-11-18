@@ -200,4 +200,40 @@ class RegistrarAdmisionUseCaseTest {
 
         assertTrue(paqueteGuardado.isAlertaDensidadAtipica(), "La alerta de densidad atípica debería estar activada");
     }
+
+    @Test
+    void registrarAdmisionSinGeocodingQuedaConGpsPendiente() {
+        // FR-002: si la geocodificación falla, se registra con GPS PENDIENTE y sin solicitar ruta
+        RegistroAdmisionCommand command = createBaseCommandBuilder()
+                .peso(10.0)
+                .largo(50.0)
+                .ancho(30.0)
+                .alto(20.0)
+                .build();
+
+        when(geocodingService.localizar(command.direccionDestino())).thenReturn(Optional.empty());
+        when(paqueteRepository.save(any(Paquete.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        UUID paqueteId = registrarAdmisionUseCase.registrarAdmision(command);
+
+        assertNotNull(paqueteId);
+        ArgumentCaptor<Paquete> captor = ArgumentCaptor.forClass(Paquete.class);
+        verify(paqueteRepository).save(captor.capture());
+        assertEquals(com.logistics.packages.domain.valueobject.EstadoGps.PENDIENTE, captor.getValue().getEstadoGps());
+        verify(coverageService, never()).isWithinCoverage(any());
+        verify(solicitarRutaUseCase, never()).handle(any());
+    }
+
+    @Test
+    void registrarAdmisionFueraDeCoberturaLanzaExcepcion() {
+        RegistroAdmisionCommand command = createBaseCommandBuilder()
+                .coordenadasManuales(new Coordenadas(40.4, -3.7))
+                .build();
+
+        when(coverageService.isWithinCoverage(command.coordenadasManuales())).thenReturn(false);
+
+        assertThrows(com.logistics.packages.domain.exception.InvalidCoverageException.class,
+                () -> registrarAdmisionUseCase.registrarAdmision(command));
+        verify(paqueteRepository, never()).save(any());
+    }
 }

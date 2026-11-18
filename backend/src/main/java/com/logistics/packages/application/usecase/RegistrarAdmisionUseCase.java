@@ -46,19 +46,28 @@ public class RegistrarAdmisionUseCase implements RegistrarAdmisionIn {
             coordenadas = coordenadasOpt.orElse(null);
         }
 
-        if (coordenadas != null && coverageService.isWithinCoverage(coordenadas)) {
-            UUID paqueteId = UUID.randomUUID();
-            Paquete paquete = Paquete.crearNuevo(
-                    paqueteId,
-                    command.sedeId(),
-                    command.direccionDestino(),
-                    command.valorDeclarado(),
-                    command.metodoPago(),
-                    command.remitente(),
-                    command.destinatario(),
-                    command.tipoMercancia(),
-                    command.indicadorFormaIrregular()
-            );
+        // Coordenadas conocidas pero fuera de cobertura: se rechaza la admisión.
+        if (coordenadas != null && !coverageService.isWithinCoverage(coordenadas)) {
+            throw new InvalidCoverageException(command.direccionDestino());
+        }
+
+        // FR-002 / FR-009: si la geocodificación falla, el paquete se registra con GPS
+        // PENDIENTE (dirección en texto plano). Las coordenadas se ingresan después de forma
+        // manual (PATCH /coordenadas) y la solicitud de ruta queda bloqueada hasta entonces.
+        UUID paqueteId = UUID.randomUUID();
+        Paquete paquete = Paquete.crearNuevo(
+                paqueteId,
+                command.sedeId(),
+                command.direccionDestino(),
+                command.valorDeclarado(),
+                command.metodoPago(),
+                command.remitente(),
+                command.destinatario(),
+                command.tipoMercancia(),
+                command.indicadorFormaIrregular()
+        );
+
+        if (coordenadas != null) {
             paquete.asignarCoordenadas(coordenadas);
 
             // Bug Fix: Obtener coordenadas reales de la sede seleccionada en lugar de usar hardcodeadas
@@ -66,7 +75,7 @@ public class RegistrarAdmisionUseCase implements RegistrarAdmisionIn {
             Coordenadas coordenadasSede = sedeOpt
                     .map(sede -> new Coordenadas(sede.getLatitud(), sede.getLongitud()))
                     .orElseThrow(() -> new IllegalArgumentException("Sede no encontrada: " + command.sedeId()));
-            
+
             // Bug Fix: Calcular distancia SIEMPRE que hay coordenadas, no solo con pesaje
             double distanciaKm = distanceService.calcularDistanciaDesdeSede(coordenadasSede, coordenadas);
 
@@ -81,40 +90,44 @@ public class RegistrarAdmisionUseCase implements RegistrarAdmisionIn {
                 // Bug Fix: Asignar la distancia incluso sin pesaje, con precio provisional 0
                 paquete.asignarPrecioEnvio(BigDecimal.ZERO, distanciaKm);
             }
-
-            Paquete saved = paqueteRepository.save(paquete);
-            
-            // Subir evidencia fotográfica si se proporcionó
-            String urlEvidencia = null;
-            if (command.evidencia() != null && !command.evidencia().isEmpty()) {
-                urlEvidencia = archivoStoragePort.guardar(
-                    "admision",
-                    saved.getId().toString(),
-                    command.evidencia()
-                );
-            }
-
-            // Registrar en el historial la transición inicial: RECIBIDO_EN_SEDE
-            // Bug Fix: Usar usuarioId del comando en lugar del hardcodeado SISTEMA_ID
-            HistorialEstado historialInicial = new HistorialEstado(
-                    saved.getId(),
-                    null, // No hay estado anterior (es el inicio)
-                    saved.getEstado(), // RECIBIDO_EN_SEDE
-                    "Paquete recibido en sede",
-                    command.usuarioId(),
-                    urlEvidencia
-            );
-            historialEstadoRepository.guardar(historialInicial);
-
-            if (haEjecutadoPesaje(command)) {
-                SolicitudRutaEvent evento = SolicitudRutaEvent.of(saved.getId());
-                solicitarRutaUseCase.handle(evento);
-            }
-
-            return saved.getId();
+        } else if (haEjecutadoPesaje(command)) {
+            // Sin coordenadas no hay distancia ni precio; el pesaje sí se registra
+            Peso peso = new Peso(command.peso());
+            Dimensiones dimensiones = new Dimensiones(command.largo(), command.ancho(), command.alto());
+            paquete.procesarPesaje(peso, dimensiones, command.tipoMercancia(), command.indicadorFormaIrregular());
         }
 
-        throw new InvalidCoverageException(command.direccionDestino());
+        Paquete saved = paqueteRepository.save(paquete);
+
+        // Subir evidencia fotográfica si se proporcionó
+        String urlEvidencia = null;
+        if (command.evidencia() != null && !command.evidencia().isEmpty()) {
+            urlEvidencia = archivoStoragePort.guardar(
+                "admision",
+                saved.getId().toString(),
+                command.evidencia()
+            );
+        }
+
+        // Registrar en el historial la transición inicial: RECIBIDO_EN_SEDE
+        // Bug Fix: Usar usuarioId del comando en lugar del hardcodeado SISTEMA_ID
+        HistorialEstado historialInicial = new HistorialEstado(
+                saved.getId(),
+                null, // No hay estado anterior (es el inicio)
+                saved.getEstado(), // RECIBIDO_EN_SEDE
+                "Paquete recibido en sede",
+                command.usuarioId(),
+                urlEvidencia
+        );
+        historialEstadoRepository.guardar(historialInicial);
+
+        // solicitar_ruta solo con coordenadas resueltas y pesaje completo
+        if (coordenadas != null && haEjecutadoPesaje(command)) {
+            SolicitudRutaEvent evento = SolicitudRutaEvent.of(saved.getId());
+            solicitarRutaUseCase.handle(evento);
+        }
+
+        return saved.getId();
     }
 
     private boolean haEjecutadoPesaje(RegistroAdmisionCommand command) {

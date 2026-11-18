@@ -1,7 +1,7 @@
 # ── Build stage ────────────────────────────────────────────────
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /workspace
-COPY gradlew build.gradle settings.gradle gradle.properties ./
+COPY gradlew build.gradle settings.gradle ./
 COPY gradle gradle
 RUN chmod +x gradlew && ./gradlew dependencies --no-daemon -q > /dev/null 2>&1 || true
 COPY src src
