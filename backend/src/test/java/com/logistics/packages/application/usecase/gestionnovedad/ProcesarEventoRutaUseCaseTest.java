@@ -148,9 +148,10 @@ class ProcesarEventoRutaUseCaseTest {
         assertEquals(EstadoPaquete.EN_TRANSITO, paquete.getEstado());
         verify(paqueteRepository).save(paquete);
         verify(eventoProcesadoRepository).guardar(any());
-        verify(estadoPaqueteFinanzasPublisher).publicarEstadoFinal(paquete);
+        // EN_TRANSITO no es estado final: no se publica a Finanzas (M3)
+        verify(estadoPaqueteFinanzasPublisher, never()).publicarEstadoFinal(any());
     }
-    
+
     @Test
     @DisplayName("Lanza PaqueteNotFoundException si el paquete no existe")
     void testPaqueteNoEncontrado() {

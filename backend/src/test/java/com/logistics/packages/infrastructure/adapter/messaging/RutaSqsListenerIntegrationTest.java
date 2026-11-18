@@ -107,8 +107,9 @@ class RutaSqsListenerIntegrationTest {
 
                     Paquete paquete = paqueteActualizado.get();
                     assertEquals(rutaId, paquete.getRutaId(), "La ruta debe estar asignada");
-                    assertEquals(EstadoPaquete.LISTO_PARA_DESPACHO, paquete.getEstado(),
-                            "El estado debe cambiar a LISTO_PARA_DESPACHO");
+                    // La asignación de ruta no cambia el estado (lo define la clasificación)
+                    assertEquals(EstadoPaquete.RECIBIDO_EN_SEDE, paquete.getEstado(),
+                            "El estado no debe cambiar al asignar ruta");
                 });
     }
 

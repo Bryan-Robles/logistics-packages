@@ -119,10 +119,11 @@ class PaqueteTest {
     }
 
     @Test
-    void asignarRutaCambiaEstadoYGuardaId() {
+    void asignarRutaGuardaIdSinCambiarEstado() {
         UUID rutaId = UUID.randomUUID();
+        EstadoPaquete estadoInicial = paquete.getEstado();
         paquete.asignarRuta(rutaId);
-        assertEquals(EstadoPaquete.LISTO_PARA_DESPACHO, paquete.getEstado());
+        assertEquals(estadoInicial, paquete.getEstado());
         assertEquals(rutaId, paquete.getRutaId());
     }
 

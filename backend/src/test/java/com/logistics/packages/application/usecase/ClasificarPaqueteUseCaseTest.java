@@ -7,7 +7,6 @@ import com.logistics.packages.application.repository.HistorialEstadoRepository;
 import com.logistics.packages.domain.exception.PaqueteNotFoundException;
 import com.logistics.packages.domain.exception.ZonaDestinoNotFoundException;
 import com.logistics.packages.domain.exception.ZonaDestinoSaturadaException;
-import com.logistics.packages.domain.exception.ZonaNoAptaException;
 import com.logistics.packages.domain.model.Paquete;
 import com.logistics.packages.domain.model.ZonaDestino;
 import com.logistics.packages.domain.service.CalculoZonaDestinoService;
@@ -172,27 +171,26 @@ class ClasificarPaqueteUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción si la zona no es apta para el tipo de mercancía")
-    void debeLanzarExcepcionSiZonaNoAptaParaTipoMercancia() {
-        // Given
+    @DisplayName("Confirma la clasificación aunque la categoría de zona no coincida con el tipo de mercancía")
+    void confirmaClasificacionSinValidarTipoMercancia() {
+        // La validación de tipo de mercancía vs. categoría de zona se retiró de la
+        // confirmación (commit 3863712): el operario decide la zona final.
         paquete = Paquete.builder()
                 .id(paquete.getId())
                 .estado(EstadoPaquete.EN_CLASIFICACION)
                 .coordenadas(paquete.getCoordenadas())
                 .tipoMercancia(TipoMercancia.PELIGROSO)
                 .build();
-        zonaDestino.setCategoria(CategoriaZona.NORMAL); // NORMAL no puede con PELIGROSO
+        zonaDestino.setCategoria(CategoriaZona.NORMAL);
 
         when(paqueteRepository.findById(paquete.getId())).thenReturn(Optional.of(paquete));
         when(zonaDestinoRepository.findById(zonaDestino.getId())).thenReturn(Optional.of(zonaDestino));
 
-        // When & Then
-        assertThrows(ZonaNoAptaException.class,
+        assertDoesNotThrow(
                 () -> clasificarUseCase.confirmarClasificacion(paquete.getId(), zonaDestino.getId(), null));
-        
-        verify(paqueteRepository).findById(paquete.getId());
-        verify(zonaDestinoRepository).findById(zonaDestino.getId());
-        verify(paqueteRepository, never()).save(any());
+
+        verify(paqueteRepository).save(paquete);
+        assertEquals(EstadoPaquete.LISTO_PARA_DESPACHO, paquete.getEstado());
     }
 
     @Test

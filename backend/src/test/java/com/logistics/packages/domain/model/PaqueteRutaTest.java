@@ -37,7 +37,7 @@ class PaqueteRutaTest {
     // ============================================================
     
     @Test
-    @DisplayName("T301: asignarRuta() asigna el rutaId y cambia el estado a LISTO_PARA_DESPACHO")
+    @DisplayName("T301: asignarRuta() asigna el rutaId sin cambiar el estado (el estado lo define la clasificación)")
     void testAsignarRutaConIdValido() {
         // Given
         UUID rutaId = UUID.randomUUID();
@@ -49,7 +49,7 @@ class PaqueteRutaTest {
         
         // Then
         assertEquals(rutaId, paquete.getRutaId());
-        assertEquals(EstadoPaquete.LISTO_PARA_DESPACHO, paquete.getEstado());
+        assertEquals(EstadoPaquete.RECIBIDO_EN_SEDE, paquete.getEstado());
     }
     
     @Test

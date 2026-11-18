@@ -1,7 +1,10 @@
 package com.logistics.packages.infrastructure.messaging.consumers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
@@ -12,7 +15,32 @@ import java.io.IOException;
  */
 public class JsonNodeMapper {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    // JavaTimeModule: payloads carry OffsetDateTime/LocalDateTime fields.
+    // Unknown properties are ignored: other modules may add fields to their events.
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+    /**
+     * Convierte un payload de SQS al tipo esperado.
+     * - Si ya es del tipo esperado (mensaje con header de tipo), se usa tal cual.
+     * - Si llega como String (JSON crudo de otra cuenta AWS), se parsea.
+     * - En otro caso (p. ej. Map), se convierte vía árbol JSON.
+     */
+    public static <T> T convert(Object payload, Class<T> targetClass) {
+        if (targetClass.isInstance(payload)) {
+            return targetClass.cast(payload);
+        }
+        try {
+            if (payload instanceof String json) {
+                return objectMapper.readValue(json, targetClass);
+            }
+            return objectMapper.convertValue(payload, targetClass);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir payload a " + targetClass.getSimpleName(), e);
+        }
+    }
 
     /**
      * Convierte cualquier objeto Java a JsonNode
