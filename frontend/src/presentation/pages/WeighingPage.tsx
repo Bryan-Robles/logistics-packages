@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { MerchandiseType } from "@/domain/enums/merchandise-type.enum";
 import { useAdmission } from "@/lib/admission-context";
 import { WeighingApiService } from "@/infrastructure/http/weighing-api.service";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 // Constante para cálculo de peso volumétrico
 const DENSITY_FACTOR = 250;
@@ -153,7 +154,8 @@ export function WeighingPage() {
       setPrecioEnvio(response.precioEnvio);
       setPesajeConfirmado(true);
       toast.success(`✅ Pesaje completado. Precio: $${response.precioEnvio}`);
-    } catch (error: any) {
+    } catch (caught) {
+      const error = errorInfo(caught);
       let errorMsg = error.message || "Error desconocido";
       // Mejorar mensaje para errores de validación de peso
       if (errorMsg.includes("Peso") || errorMsg.includes("peso")) {
@@ -184,7 +186,8 @@ export function WeighingPage() {
       setPrecioEnvio(response.precioEnvio);
       setPesajeConfirmado(true);
       toast.success(`✅ Pesaje confirmado. Precio: $${response.precioEnvio}`);
-    } catch (error: any) {
+    } catch (caught) {
+      const error = errorInfo(caught);
       let errorMsg = error.message || "Error desconocido";
       // Mejorar mensaje para errores de validación de peso
       if (errorMsg.includes("Peso") || errorMsg.includes("peso")) {

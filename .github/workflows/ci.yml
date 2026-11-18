@@ -57,6 +57,6 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
       - name: Lint
-        run: npm run lint
+        run: npm run lint -- --max-warnings 0
       - name: Build
         run: npm run build

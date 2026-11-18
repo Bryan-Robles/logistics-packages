@@ -7,7 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { AdmissionControl, AdmissionErrors, AdmissionSetValue } from "./form-types";
+import type {
+  AdmissionControl,
+  AdmissionErrors,
+  AdmissionSetValue,
+  AdmissionTouched,
+} from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
@@ -32,7 +37,7 @@ interface RecipientFormProps {
   control: AdmissionControl;
   setValue: AdmissionSetValue;
   errors?: AdmissionErrors;
-  touched?: any;
+  touched?: AdmissionTouched;
 }
 
 // Componente interno para Select de ciudades con autocompletado de departamento

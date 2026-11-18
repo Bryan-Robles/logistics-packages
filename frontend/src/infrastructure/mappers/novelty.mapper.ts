@@ -22,6 +22,20 @@ export interface NoveltyDTO {
   closedAt?: string;
 }
 
+/** Item de GET /api/paquetes/novedades (HistorialEstadoItemDto del backend). */
+export interface HistorialNovedadDTO {
+  id: string;
+  paqueteId: string;
+  estadoAnterior: string | null;
+  estadoNuevo: string;
+  observaciones?: string;
+  usuarioId: string;
+  urlEvidencia?: string;
+  tipoNovedad?: string | null;
+  fechaTransicionUtc: string;
+  estadoNovedad?: string | null;
+}
+
 export interface BackendNovedadResponseDTO {
   paqueteId: string;
   estadoActual: string;
@@ -62,7 +76,7 @@ export class NoveltyMapper {
    * Usado para listar todas las novedades desde GET /api/novedades.
    * FE-4: Mapea el estado real de la novedad desde backend.
    */
-  static fromHistorialItemDto(dto: any): Novelty {
+  static fromHistorialItemDto(dto: HistorialNovedadDTO): Novelty {
     // Mapear estado a NoveltyType: NOVEDAD_EN_BODEGA_DAÑADO -> DAMAGED
     const stateToType: Record<string, NoveltyType> = {
       NOVEDAD_EN_BODEGA_DAÑADO: NoveltyType.DAMAGED,

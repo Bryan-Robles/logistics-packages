@@ -59,5 +59,30 @@ export function parseApiError(error: unknown): ApiErrorResponse {
   };
 }
 
+/** Error thrown by the HTTP services, carrying the backend error code. */
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly codigo?: string,
+    readonly status?: number,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+/** Builds an ApiError from any failed request, using `fallback` when the backend sends no message. */
+export function toApiError(error: unknown, fallback: string): ApiError {
+  const parsed = parseApiError(error);
+  return new ApiError(parsed.mensaje || fallback, parsed.codigo, parsed.status);
+}
+
+/** Message and code from any caught value, for UI catch blocks. */
+export function errorInfo(error: unknown): { message: string; codigo?: string } {
+  if (error instanceof ApiError) return { message: error.message, codigo: error.codigo };
+  if (error instanceof Error) return { message: error.message };
+  return { message: String(error) };
+}
+
 export { getToken, removeToken, TOKEN_KEY };
 export default api;

@@ -24,7 +24,8 @@ import { AdmisionApiService } from "@/infrastructure/http/admission-api.service"
 import { SedesApiService, SedeDTO } from "@/infrastructure/http/sedes-api.service";
 import { DocumentType } from "@/domain/enums/document-type.enum";
 import { PaymentMethod } from "@/domain/enums/payment-method.enum";
-import { admissionSchema } from "@/domain/validators/admission.validator";
+import { admissionSchema, type AdmissionFormData } from "@/domain/validators/admission.validator";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 export function AdmissionPage() {
   const navigate = useNavigate();
@@ -104,7 +105,7 @@ export function AdmissionPage() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: AdmissionFormData) => {
     setIsSubmitting(true);
     try {
       // FE-2: Llamar al backend con AdmisionApiService - payload 100% dinámico
@@ -139,7 +140,8 @@ export function AdmissionPage() {
           navigate({ to: "/pesaje" });
         }, 1000);
       }
-    } catch (error: any) {
+    } catch (caught) {
+      const error = errorInfo(caught);
       if (error.message.includes("COBERTURA_INVALIDA")) {
         toast.error("❌ Dirección fuera de cobertura. Por favor verifique los datos de entrega.");
       } else {
@@ -225,12 +227,12 @@ export function AdmissionPage() {
                   )}
                 </section>
               )}
-              <SenderForm control={control} errors={errors as any} touched={touchedFields as any} />
+              <SenderForm control={control} errors={errors} touched={touchedFields} />
               <RecipientForm
                 control={control}
                 setValue={setValue}
-                errors={errors as any}
-                touched={touchedFields as any}
+                errors={errors}
+                touched={touchedFields}
               />
             </div>
             <div className="space-y-6 lg:col-span-2">
@@ -247,11 +249,7 @@ export function AdmissionPage() {
                   }, 1500);
                 }}
               />
-              <ShippingInfoSection
-                control={control}
-                errors={errors as any}
-                touched={touchedFields as any}
-              />
+              <ShippingInfoSection control={control} errors={errors} touched={touchedFields} />
               <div className="space-y-3">
                 <Button
                   type="submit"

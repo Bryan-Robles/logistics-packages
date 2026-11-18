@@ -84,17 +84,8 @@ export function DiscrepancyPage() {
         anchoOriginal ?? undefined,
         altoOriginal ?? undefined,
       ),
-    [
-      formData.pesoCorregido,
-      formData.largoCorregido,
-      formData.anchoCorregido,
-      formData.altoCorregido,
-      pesoOriginal,
-      largoOriginal,
-      anchoOriginal,
-      altoOriginal,
-      calculateDifferences,
-    ],
+    // calculateDifferences cambia cuando cambian los valores corregidos (useCallback en el hook)
+    [pesoOriginal, largoOriginal, anchoOriginal, altoOriginal, calculateDifferences],
   );
 
   // Determinar qué cambió para mostrar en el Resumen

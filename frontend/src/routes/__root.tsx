@@ -8,8 +8,9 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { AuthProvider, useAuth } from "../lib/auth-context";
-import { AdmissionProvider } from "../lib/admission-context";
+import { useAuth } from "../lib/auth-context";
+import { AuthProvider } from "../lib/auth-provider";
+import { AdmissionProvider } from "../lib/admission-provider";
 
 import appCss from "../styles.css?url";
 

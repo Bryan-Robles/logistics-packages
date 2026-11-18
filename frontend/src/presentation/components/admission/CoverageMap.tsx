@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Field } from "../shared/Field";
 import { toast } from "sonner";
 import { AdmisionApiService } from "@/infrastructure/http/admission-api.service";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 export interface CoverageMapProps {
   /** Estado del GPS: PENDIENTE (requiere entrada manual), RESUELTO (GPS exitoso) o null */
@@ -71,7 +72,8 @@ export function CoverageMap({
       // Limpiar inputs
       setManualLat("");
       setManualLon("");
-    } catch (error: any) {
+    } catch (caught) {
+      const error = errorInfo(caught);
       toast.error(`Error: ${error.message}`);
     } finally {
       setIsSubmitting(false);
