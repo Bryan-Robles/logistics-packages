@@ -30,8 +30,8 @@ aws:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}    # CAMBIAR: tu correo de Gmail
-    password: ${MAIL_PASSWORD}        # CAMBIAR: contraseña de aplicación (NO tu contraseña de Google)
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:

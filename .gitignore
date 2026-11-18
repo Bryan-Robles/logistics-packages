@@ -1,9 +1,30 @@
-# Ignorar la carpeta de configuración de VS Code
+# ── Editors / OS ──
 .vscode/
 .idea/
+*.iml
+.DS_Store
+Thumbs.db
 
-# Skills locales de opencode (uso personal, no se versionan)
+# ── Secrets ──
+.env
+.env.*
+!.env.example
+
+# ── Backend (Gradle) ──
+backend/.gradle/
+backend/build/
+backend/bin/
+backend/out/
+*.jar
+!backend/gradle/wrapper/gradle-wrapper.jar
+
+# ── Frontend (Node) ──
+node_modules/
+frontend/dist/
+frontend/.output/
+frontend/.wrangler/
+frontend/.tanstack/
+
+# ── Local tooling ──
 .opencode/
-
-# Logs y reportes dinámicos del Agente de IA
-Backend/Externo/Agent/.sync-status.json
+backend/Externo/Agent/.sync-status.json
