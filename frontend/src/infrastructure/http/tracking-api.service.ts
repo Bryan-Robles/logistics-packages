@@ -37,7 +37,7 @@ export interface TrackingPaqueteDTO {
 /**
  * Servicio HTTP para operaciones de tracking de paquetes.
  * FT-3: feature/tracking-paquete-en-ruta
- * 
+ *
  * Endpoints:
  * - GET /api/paquetes/{paqueteId}/tracking - Obtiene tracking en tiempo real
  */
@@ -47,14 +47,14 @@ export class TrackingApiService {
   /**
    * Obtiene el tracking en tiempo real de un paquete.
    * Incluye estado actual + historial completo de transiciones.
-   * 
+   *
    * @param paqueteId ID del paquete
    * @returns DTO con tracking completo
    */
   static async obtenerTracking(paqueteId: string): Promise<TrackingPaqueteDTO> {
     try {
       const response = await httpClient.get<TrackingPaqueteDTO>(
-        `${this.BASE_URL}/${paqueteId}/tracking`
+        `${this.BASE_URL}/${paqueteId}/tracking`,
       );
       return response.data;
     } catch (error) {

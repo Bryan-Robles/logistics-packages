@@ -34,7 +34,8 @@ export function ZoneAssignmentPanel({
           <AlertTriangle className="h-4 w-4 text-warning" />
           <AlertTitle>Zona Sugerida Saturada</AlertTitle>
           <AlertDescription>
-            La zona {nombreZonaPrincipal} ha alcanzado su capacidad. Se sugiere zona de contingencia: {suggestedZone}.
+            La zona {nombreZonaPrincipal} ha alcanzado su capacidad. Se sugiere zona de
+            contingencia: {suggestedZone}.
           </AlertDescription>
         </Alert>
       )}
@@ -58,9 +59,7 @@ export function ZoneAssignmentPanel({
             >
               Sugerencia Automática
             </p>
-            <p className="text-lg font-bold text-foreground">
-              {suggestedZone}
-            </p>
+            <p className="text-lg font-bold text-foreground">{suggestedZone}</p>
             <p className="text-xs text-muted-foreground">
               Categoría: {zonaCategoria || "Desconocida"}
             </p>

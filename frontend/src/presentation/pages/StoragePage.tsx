@@ -19,17 +19,17 @@ import { BreadcrumbNav } from "../components/shared/BreadcrumbNav";
 import { ZoneAssignmentPanel } from "../components/storage/ZoneAssignmentPanel";
 import { CapacitySection } from "../components/storage/CapacitySection";
 import { toast } from "sonner";
-import { StorageApiService, StorageZoneSuggestionDTO } from "@/infrastructure/http/storage-api.service";
+import {
+  StorageApiService,
+  StorageZoneSuggestionDTO,
+} from "@/infrastructure/http/storage-api.service";
 import { useAdmission } from "@/lib/admission-context";
 import { useCases } from "@/lib/di";
 
 export function StoragePage() {
   const navigate = useNavigate();
   const searchParams = useSearch({ from: "/gestion" });
-  const {
-    setPaqueteId: setContextPaqueteId,
-    setZonaId: setContextZonaId,
-  } = useAdmission();
+  const { setPaqueteId: setContextPaqueteId, setZonaId: setContextZonaId } = useAdmission();
   const [packageId, setPackageId] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [suggestion, setSuggestion] = useState<StorageZoneSuggestionDTO | null>(null);
@@ -65,13 +65,13 @@ export function StoragePage() {
       setSuggestion(result);
       toast.dismiss();
       toast.success(`Zona sugerida: ${result.nombreZona}`);
-     } catch (err: any) {
-       const errorMsg = err.message || "Error al buscar el paquete";
-       const errorCode = err.codigo || "";
-       setError(errorMsg);
-       toast.dismiss();
-       toast.error(errorMsg);
-     } finally {
+    } catch (err: any) {
+      const errorMsg = err.message || "Error al buscar el paquete";
+      const errorCode = err.codigo || "";
+      setError(errorMsg);
+      toast.dismiss();
+      toast.error(errorMsg);
+    } finally {
       setLoadingSearch(false);
     }
   };
@@ -91,7 +91,7 @@ export function StoragePage() {
       toast.success("Paquete almacenado con éxito.", {
         description: "Redirigiendo a la pantalla de clasificación...",
       });
-      
+
       // Navegar a clasificación con el paqueteId
       setTimeout(() => {
         navigate({ to: "/clasificacion", search: { paqueteId: suggestion.paqueteId } });
@@ -101,7 +101,7 @@ export function StoragePage() {
       const errorCode = err.codigo || "";
       setError(errorMsg);
       toast.dismiss();
-      
+
       // Manejo de errores específicos basado en el código
       if (errorCode === "ZONA_SATURADA") {
         toast.error("Zona saturada", {
@@ -200,21 +200,25 @@ export function StoragePage() {
             <RouteIcon className="h-4 w-4" />
             <AlertTitle className="font-bold">Paquete Encontrado</AlertTitle>
             <AlertDescription>
-              Paquete <span className="font-mono font-semibold">{suggestion.paqueteId}</span> asignado a zona{" "}
+              Paquete <span className="font-mono font-semibold">{suggestion.paqueteId}</span>{" "}
+              asignado a zona{" "}
               <span className="font-mono font-semibold">{suggestion.nombreZona}</span>.
             </AlertDescription>
           </Alert>
         )}
 
-        {suggestion && (suggestion.tipoMercancia === "FRAGIL" || suggestion.tipoMercancia === "PELIGROSO") && (
-          <Alert className="mb-6 bg-amber/5 border-amber/20">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle className="font-bold">Alerta de Manejo Especial</AlertTitle>
-            <AlertDescription>
-              Este paquete contiene mercancía {suggestion.tipoMercancia === "FRAGIL" ? "frágil" : "peligrosa"} que requiere cuidado especial. Verifica que se almacene correctamente.
-            </AlertDescription>
-          </Alert>
-        )}
+        {suggestion &&
+          (suggestion.tipoMercancia === "FRAGIL" || suggestion.tipoMercancia === "PELIGROSO") && (
+            <Alert className="mb-6 bg-amber/5 border-amber/20">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle className="font-bold">Alerta de Manejo Especial</AlertTitle>
+              <AlertDescription>
+                Este paquete contiene mercancía{" "}
+                {suggestion.tipoMercancia === "FRAGIL" ? "frágil" : "peligrosa"} que requiere
+                cuidado especial. Verifica que se almacene correctamente.
+              </AlertDescription>
+            </Alert>
+          )}
 
         {suggestion && (
           <div className="grid gap-6 lg:grid-cols-3">
@@ -248,16 +252,16 @@ export function StoragePage() {
                 <FileText className="h-4 w-4" />
                 Reportar Discrepancia Física
               </Button>
-               <Button
-                 asChild
-                 variant="outline"
-                 className="h-12 w-full border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
-               >
-                 <Link to="/reportar-novedad" search={{ paqueteId: suggestion.paqueteId }}>
-                   <AlertTriangle className="h-4 w-4" />
-                   Reportar Novedad (Daño/Extra)
-                 </Link>
-               </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="h-12 w-full border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
+              >
+                <Link to="/reportar-novedad" search={{ paqueteId: suggestion.paqueteId }}>
+                  <AlertTriangle className="h-4 w-4" />
+                  Reportar Novedad (Daño/Extra)
+                </Link>
+              </Button>
 
               <CapacitySection
                 pesoActualKg={suggestion.pesoActualKg}

@@ -91,14 +91,14 @@ export function NoveltyReportPage() {
           items={[{ label: "Gestión de Ingreso", to: "/gestion" }, { label: "Reportar Novedad" }]}
         />
 
-       <div className="mb-8">
-         <h1 className="text-3xl font-bold tracking-tight text-foreground">
-           Reportar Novedad en Bodega
-         </h1>
-         <p className="mt-1 text-sm text-muted-foreground">
-           Paquete: <span className="font-mono font-semibold">{paqueteId}</span>
-         </p>
-       </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Reportar Novedad en Bodega
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Paquete: <span className="font-mono font-semibold">{paqueteId}</span>
+          </p>
+        </div>
 
         <NoveltyForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
       </main>

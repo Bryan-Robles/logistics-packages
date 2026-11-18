@@ -16,7 +16,7 @@ export interface SedeDTO {
 
 /**
  * Servicio HTTP para operaciones de Sedes.
- * 
+ *
  * Endpoints:
  * - GET /api/sedes - Obtiene la lista de sedes disponibles
  */
@@ -26,7 +26,7 @@ export class SedesApiService {
   /**
    * Obtiene la lista de todas las sedes disponibles.
    * Utilizado para poblar el selector de sedes en el formulario de admisión.
-   * 
+   *
    * @returns Array de sedes con id, nombre, ciudad, tipo
    */
   static async obtenerSedes(): Promise<SedeDTO[]> {

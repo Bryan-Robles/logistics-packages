@@ -47,15 +47,15 @@ export function NoveltyForm({ onSubmit, isSubmitting }: NoveltyFormProps) {
             </Select>
           </div>
 
-           <div>
-             <label className="text-xs font-semibold text-foreground">Notas Adicionales</label>
-             <Textarea
-               rows={4}
-               placeholder="Describa el daño, la situación o el último lugar donde se vio el paquete..."
-               value={notas}
-               onChange={(e) => setNotas(e.target.value)}
-             />
-           </div>
+          <div>
+            <label className="text-xs font-semibold text-foreground">Notas Adicionales</label>
+            <Textarea
+              rows={4}
+              placeholder="Describa el daño, la situación o el último lugar donde se vio el paquete..."
+              value={notas}
+              onChange={(e) => setNotas(e.target.value)}
+            />
+          </div>
 
           {tipoNovedad === "danado" && (
             <div>
@@ -99,14 +99,14 @@ export function NoveltyForm({ onSubmit, isSubmitting }: NoveltyFormProps) {
         </div>
       </section>
 
-       <Button
-         size="lg"
-         className={`h-12 w-full bg-gradient-to-r from-destructive to-orange-500 text-base font-bold text-white shadow-[var(--shadow-elevated)] transition-opacity ${
-           isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
-         }`}
-         onClick={() => onSubmit({ tipo: tipoNovedad, notas, evidencia: evidenceFile })}
-         disabled={isSubmitDisabled || isSubmitting}
-       >
+      <Button
+        size="lg"
+        className={`h-12 w-full bg-gradient-to-r from-destructive to-orange-500 text-base font-bold text-white shadow-[var(--shadow-elevated)] transition-opacity ${
+          isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        onClick={() => onSubmit({ tipo: tipoNovedad, notas, evidencia: evidenceFile })}
+        disabled={isSubmitDisabled || isSubmitting}
+      >
         {isSubmitting ? (
           <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />
         ) : (
@@ -119,7 +119,10 @@ export function NoveltyForm({ onSubmit, isSubmitting }: NoveltyFormProps) {
         <div className="mt-3 rounded-lg bg-destructive/10 border border-destructive/20 p-3">
           <p className="text-sm text-destructive flex items-start gap-2">
             <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-            <span><strong>Acción requerida:</strong> Debe adjuntar la evidencia fotográfica (foto o video) antes de confirmar el reporte de paquete dañado.</span>
+            <span>
+              <strong>Acción requerida:</strong> Debe adjuntar la evidencia fotográfica (foto o
+              video) antes de confirmar el reporte de paquete dañado.
+            </span>
           </p>
         </div>
       )}

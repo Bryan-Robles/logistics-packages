@@ -11,7 +11,7 @@ interface VisorNovedadesProps {
 /**
  * Componente que visualiza el historial inmutable de transiciones de estado de un paquete.
  * MOD1-UC-007: T718 - Consumo del endpoint GET /api/paquetes/{id}/historial
- * 
+ *
  * Funcionalidades:
  * - Carga automática del historial desde el backend
  * - Timeline cronológico de transiciones
@@ -29,15 +29,11 @@ export function VisorNovedades({ paqueteId }: VisorNovedadesProps) {
       setError(null);
 
       try {
-        const datos = await noveltyHistoryApiService.fetchHistorialByPaqueteId(
-          paqueteId
-        );
+        const datos = await noveltyHistoryApiService.fetchHistorialByPaqueteId(paqueteId);
         setHistorial(datos);
       } catch (err) {
         console.error("Error al cargar historial:", err);
-        setError(
-          "No se pudo cargar el historial del paquete. Intenta de nuevo más tarde."
-        );
+        setError("No se pudo cargar el historial del paquete. Intenta de nuevo más tarde.");
       } finally {
         setLoading(false);
       }
@@ -161,9 +157,9 @@ export function VisorNovedades({ paqueteId }: VisorNovedadesProps) {
       {/* Nota explicativa */}
       <div className="mt-6 rounded-md bg-info/10 p-3 text-xs text-info-foreground">
         <p>
-          <strong>Nota:</strong> Este historial es inmutable y registra todas las
-          transiciones de estado del paquete desde su ingreso hasta el presente. Cada
-          registro está vinculado a un UUID único y preserva la trazabilidad completa.
+          <strong>Nota:</strong> Este historial es inmutable y registra todas las transiciones de
+          estado del paquete desde su ingreso hasta el presente. Cada registro está vinculado a un
+          UUID único y preserva la trazabilidad completa.
         </p>
       </div>
     </div>

@@ -61,7 +61,7 @@ export function isTokenExpired(token: string): boolean {
 /**
  * Extrae el UUID del usuario del claim 'sub' del JWT token.
  * Spring Security emite el UUID como el 'subject' estándar del JWT.
- * 
+ *
  * @param token Token JWT
  * @returns UUID del usuario o null si no se pudo extraer
  */

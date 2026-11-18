@@ -7,11 +7,11 @@ interface ShipmentSummaryProps {
   sedeNombre: string | null;
 }
 
-export function ShipmentSummary({ 
-  remitenteNombre, 
-  destinatarioNombre, 
+export function ShipmentSummary({
+  remitenteNombre,
+  destinatarioNombre,
   direccionDestino,
-  sedeNombre
+  sedeNombre,
 }: ShipmentSummaryProps) {
   return (
     <section className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">

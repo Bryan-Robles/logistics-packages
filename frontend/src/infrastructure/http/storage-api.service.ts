@@ -100,7 +100,7 @@ export interface ConfirmacionClasificacionDTO {
 /**
  * Servicio HTTP para operaciones de almacenaje y clasificación de paquetes.
  * MOD1-IP-004 (UC-004) y MOD1-IP-005 (UC-005)
- * 
+ *
  * Endpoints:
  * - GET /api/paquetes/{paqueteId}/almacenaje/sugerencia
  * - POST /api/paquetes/{paqueteId}/almacenaje
@@ -113,31 +113,29 @@ export class StorageApiService {
   /**
    * Obtiene la zona de almacenaje sugerida para un paquete.
    * MOD1-IP-004: FR-002
-   * 
+   *
    * @param packageId ID del paquete
    * @returns Zona sugerida con información de asignación
    */
-   static async getStorageZoneSuggestion(
-     packageId: string
-   ): Promise<StorageZoneSuggestionDTO> {
-     try {
-       const response = await httpClient.get<StorageZoneSuggestionDTO>(
-         `${this.BASE_URL}/${packageId}/almacenaje/sugerencia`
-       );
-       return response.data;
-     } catch (error) {
-       const parsedError = parseApiError(error);
-       const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-       err.codigo = parsedError.codigo;
-       err.mensaje = parsedError.mensaje;
-       throw err;
-     }
-   }
+  static async getStorageZoneSuggestion(packageId: string): Promise<StorageZoneSuggestionDTO> {
+    try {
+      const response = await httpClient.get<StorageZoneSuggestionDTO>(
+        `${this.BASE_URL}/${packageId}/almacenaje/sugerencia`,
+      );
+      return response.data;
+    } catch (error) {
+      const parsedError = parseApiError(error);
+      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
+      err.codigo = parsedError.codigo;
+      err.mensaje = parsedError.mensaje;
+      throw err;
+    }
+  }
 
   /**
    * Asigna una zona de almacenaje a un paquete.
    * MOD1-IP-004: FR-001, FR-003, FR-004, FR-007, FR-009
-   * 
+   *
    * @param packageId ID del paquete
    * @param zoneId ID de la zona a asignar
    * @param discrepancy Datos físicos corregidos (opcional)
@@ -146,7 +144,7 @@ export class StorageApiService {
   static async assignStorageZone(
     packageId: string,
     zoneId: string,
-    discrepancy?: DatosFisicosDiscrepanciaDTO
+    discrepancy?: DatosFisicosDiscrepanciaDTO,
   ): Promise<StorageZoneAssignmentDTO> {
     try {
       const requestData: AsignarZonaRequestDTO = {
@@ -157,7 +155,7 @@ export class StorageApiService {
 
       const response = await httpClient.post<StorageZoneAssignmentDTO>(
         `${this.BASE_URL}/${packageId}/almacenaje`,
-        requestData
+        requestData,
       );
       return response.data;
     } catch (error) {
@@ -172,16 +170,16 @@ export class StorageApiService {
   /**
    * Obtiene la sugerencia de zona de destino para un paquete.
    * MOD1-IP-005: FR-001
-   * 
+   *
    * @param packageId ID del paquete
    * @returns Zona de destino sugerida basada en geolocalización
    */
   static async getClassificationSuggestion(
-    packageId: string
+    packageId: string,
   ): Promise<ClassificationSuggestionDTO> {
     try {
       const response = await httpClient.get<ClassificationSuggestionDTO>(
-        `${this.BASE_URL}/clasificacion/sugerencia/${packageId}`
+        `${this.BASE_URL}/clasificacion/sugerencia/${packageId}`,
       );
       return response.data;
     } catch (error) {
@@ -195,13 +193,13 @@ export class StorageApiService {
 
   /**
    * Obtiene la lista de zonas de destino disponibles.
-   * 
+   *
    * @returns Lista de zonas disponibles
    */
   static async getDestinationZones(): Promise<DestinationZoneDTO[]> {
     try {
       const response = await httpClient.get<DestinationZoneDTO[]>(
-        `${this.BASE_URL}/clasificacion/zonas`
+        `${this.BASE_URL}/clasificacion/zonas`,
       );
       return response.data || [];
     } catch (error) {
@@ -213,36 +211,35 @@ export class StorageApiService {
     }
   }
 
-   /**
-    * Confirma la clasificación de un paquete en una zona de destino.
-    * MOD1-IP-005: FR-002, FR-003, FR-004
-    * 
-    * @param packageId ID del paquete
-    * @param destinationZoneId ID de la zona de destino confirmada
-    * @returns Confirmación de clasificación
-    */
-   static async confirmClassification(
-     packageId: string,
-     destinationZoneId: string
-   ): Promise<ConfirmacionClasificacionDTO> {
-     try {
-       const requestData: ConfirmarZonaRequestDTO = {
-         paqueteId: packageId,
-         zonaDestinoId: destinationZoneId,
-       };
+  /**
+   * Confirma la clasificación de un paquete en una zona de destino.
+   * MOD1-IP-005: FR-002, FR-003, FR-004
+   *
+   * @param packageId ID del paquete
+   * @param destinationZoneId ID de la zona de destino confirmada
+   * @returns Confirmación de clasificación
+   */
+  static async confirmClassification(
+    packageId: string,
+    destinationZoneId: string,
+  ): Promise<ConfirmacionClasificacionDTO> {
+    try {
+      const requestData: ConfirmarZonaRequestDTO = {
+        paqueteId: packageId,
+        zonaDestinoId: destinationZoneId,
+      };
 
-       const response = await httpClient.post<ConfirmacionClasificacionDTO>(
-         `${this.BASE_URL}/clasificacion/confirmar`,
-         requestData
-       );
-       return response.data;
-     } catch (error) {
-       const parsedError = parseApiError(error);
-       const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-       err.codigo = parsedError.codigo;
-       err.mensaje = parsedError.mensaje;
-       throw err;
-     }
-   }
-
- }
+      const response = await httpClient.post<ConfirmacionClasificacionDTO>(
+        `${this.BASE_URL}/clasificacion/confirmar`,
+        requestData,
+      );
+      return response.data;
+    } catch (error) {
+      const parsedError = parseApiError(error);
+      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
+      err.codigo = parsedError.codigo;
+      err.mensaje = parsedError.mensaje;
+      throw err;
+    }
+  }
+}

@@ -28,10 +28,10 @@ import { admissionSchema } from "@/domain/validators/admission.validator";
 
 export function AdmissionPage() {
   const navigate = useNavigate();
-  const { 
-    setPaqueteId, 
-    setEtiquetaDigital, 
-    setEstadoGps, 
+  const {
+    setPaqueteId,
+    setEtiquetaDigital,
+    setEstadoGps,
     setEstado,
     setSedeId,
     setSedeNombre,
@@ -42,10 +42,10 @@ export function AdmissionPage() {
     setTarifaBase,
     setTarifaPorKg,
     setTarifaPorKm,
-    estadoGps, 
-    paqueteId 
+    estadoGps,
+    paqueteId,
   } = useAdmission();
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sedes, setSedes] = useState<SedeDTO[]>([]);
   const [loadingSedes, setLoadingSedes] = useState(true);
@@ -67,35 +67,42 @@ export function AdmissionPage() {
     cargarSedes();
   }, []);
 
-   // FE-2: Configurar formulario con react-hook-form y validaciones Zod
-   const { handleSubmit, control, register, setValue, trigger, formState: { errors, touchedFields } } = useForm({
-     resolver: zodResolver(admissionSchema),
-     mode: "onBlur",
-     defaultValues: {
-       sedeId: "", // FE-4: Será actualizado por setValue cuando el usuario seleccione una sede
-       remitente: {
-         tipoDocumento: DocumentType.CEDULA_CIUDADANIA,
-         numeroDocumento: "",
-         nombreCompleto: "",
-         telefono: "",
-       },
-       destinatario: {
-         tipoDocumento: DocumentType.CEDULA_CIUDADANIA,
-         numeroDocumento: "",
-         nombreCompleto: "",
-         telefono: "",
-         correoElectronico: "",
-       },
-       direccionDestino: {
-         direccion: "",
-         ciudad: "",
-         departamento: "",
-         pais: "COLOMBIA",
-       },
-       valorDeclarado: 1000,
-       metodoPago: PaymentMethod.PREPAGO,
-     },
-   });
+  // FE-2: Configurar formulario con react-hook-form y validaciones Zod
+  const {
+    handleSubmit,
+    control,
+    register,
+    setValue,
+    trigger,
+    formState: { errors, touchedFields },
+  } = useForm({
+    resolver: zodResolver(admissionSchema),
+    mode: "onBlur",
+    defaultValues: {
+      sedeId: "", // FE-4: Será actualizado por setValue cuando el usuario seleccione una sede
+      remitente: {
+        tipoDocumento: DocumentType.CEDULA_CIUDADANIA,
+        numeroDocumento: "",
+        nombreCompleto: "",
+        telefono: "",
+      },
+      destinatario: {
+        tipoDocumento: DocumentType.CEDULA_CIUDADANIA,
+        numeroDocumento: "",
+        nombreCompleto: "",
+        telefono: "",
+        correoElectronico: "",
+      },
+      direccionDestino: {
+        direccion: "",
+        ciudad: "",
+        departamento: "",
+        pais: "COLOMBIA",
+      },
+      valorDeclarado: 1000,
+      metodoPago: PaymentMethod.PREPAGO,
+    },
+  });
 
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
@@ -109,12 +116,14 @@ export function AdmissionPage() {
       setEstadoGps(response.estadoGps);
       setEstado(response.estado);
       setSedeId(data.sedeId);
-      
+
       // Guardar nombres del remitente y destinatario para mostrar en pesaje
       setRemitenteNombre(data.remitente.nombreCompleto);
       setDestinatarioNombre(data.destinatario.nombreCompleto);
-      setDireccionDestinoTexto(`${data.direccionDestino.ciudad}, ${data.direccionDestino.departamento}`);
-      
+      setDireccionDestinoTexto(
+        `${data.direccionDestino.ciudad}, ${data.direccionDestino.departamento}`,
+      );
+
       // Guardar distancia estimada para cálculo de precio dinámico en pesaje
       if (response.distanciaEstimadaKm) {
         setDistanciaKm(response.distanciaEstimadaKm);
@@ -153,9 +162,7 @@ export function AdmissionPage() {
             <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Admisión de Paquete
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Registro de nuevo envío
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Registro de nuevo envío</p>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-warning/40 bg-warning/10 px-4 py-2 text-sm font-semibold text-foreground">
             <span className="flex h-2 w-2 rounded-full bg-warning shadow-[0_0_0_4px_oklch(0.72_0.17_65/0.2)]" />
@@ -166,55 +173,69 @@ export function AdmissionPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-6 lg:grid-cols-5">
             <div className="space-y-6 lg:col-span-3">
-               {/* FT-1: Selector de Sedes */}
-               {!loadingSedes && sedes.length > 0 && (
-                 <section className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-                   <div className="mb-5 flex items-center gap-2.5">
-                     <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
-                       📍
-                     </span>
-                     <h2 className={`text-sm font-bold ${errors.sedeId ? "text-destructive" : "text-foreground"}`}>Sede de Origen</h2>
-                   </div>
-                    <Select value={selectedSedeId} onValueChange={(sedeId) => {
-                       setSelectedSedeId(sedeId);
-                       // Actualizar el valor en el formulario react-hook-form
-                       setValue("sedeId", sedeId);
-                       // Validar el campo para limpiar el error inmediatamente
-                       trigger("sedeId");
-                       // Guardar tarifas de la sede seleccionada en el contexto
-                       const sedeSeleccionada = sedes.find(s => s.id === sedeId);
-                       if (sedeSeleccionada) {
-                         setSedeNombre(sedeSeleccionada.nombre);
-                         setTarifaBase(sedeSeleccionada.tarifaBase);
-                         setTarifaPorKg(sedeSeleccionada.tarifaPorKg);
-                         setTarifaPorKm(sedeSeleccionada.tarifaPorKm);
-                       }
-                     }}>
-                     <SelectTrigger className={`w-full ${errors.sedeId ? "border-destructive" : ""}`}>
-                     <SelectValue placeholder="Seleccione una sede" />
-                     </SelectTrigger>
-                     <SelectContent>
-                       {sedes.map((sede) => (
-                         <SelectItem key={sede.id} value={sede.id}>
-                           {sede.nombre} {sede.ciudad && `(${sede.ciudad})`}
-                         </SelectItem>
-                       ))}
-                     </SelectContent>
-                   </Select>
-                   {errors.sedeId && (
-                     <p className="mt-2 text-xs text-destructive font-medium flex items-center gap-1.5">
-                       <AlertCircle className="h-3.5 w-3.5" />
-                       {errors.sedeId.message}
-                     </p>
-                   )}
-                 </section>
-               )}
-                <SenderForm control={control} errors={errors as any} touched={touchedFields as any} />
-                <RecipientForm control={control} setValue={setValue} errors={errors as any} touched={touchedFields as any} />
+              {/* FT-1: Selector de Sedes */}
+              {!loadingSedes && sedes.length > 0 && (
+                <section className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+                  <div className="mb-5 flex items-center gap-2.5">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+                      📍
+                    </span>
+                    <h2
+                      className={`text-sm font-bold ${errors.sedeId ? "text-destructive" : "text-foreground"}`}
+                    >
+                      Sede de Origen
+                    </h2>
+                  </div>
+                  <Select
+                    value={selectedSedeId}
+                    onValueChange={(sedeId) => {
+                      setSelectedSedeId(sedeId);
+                      // Actualizar el valor en el formulario react-hook-form
+                      setValue("sedeId", sedeId);
+                      // Validar el campo para limpiar el error inmediatamente
+                      trigger("sedeId");
+                      // Guardar tarifas de la sede seleccionada en el contexto
+                      const sedeSeleccionada = sedes.find((s) => s.id === sedeId);
+                      if (sedeSeleccionada) {
+                        setSedeNombre(sedeSeleccionada.nombre);
+                        setTarifaBase(sedeSeleccionada.tarifaBase);
+                        setTarifaPorKg(sedeSeleccionada.tarifaPorKg);
+                        setTarifaPorKm(sedeSeleccionada.tarifaPorKm);
+                      }
+                    }}
+                  >
+                    <SelectTrigger
+                      className={`w-full ${errors.sedeId ? "border-destructive" : ""}`}
+                    >
+                      <SelectValue placeholder="Seleccione una sede" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sedes.map((sede) => (
+                        <SelectItem key={sede.id} value={sede.id}>
+                          {sede.nombre} {sede.ciudad && `(${sede.ciudad})`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.sedeId && (
+                    <p className="mt-2 text-xs text-destructive font-medium flex items-center gap-1.5">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      {errors.sedeId.message}
+                    </p>
+                  )}
+                </section>
+              )}
+              <SenderForm control={control} errors={errors as any} touched={touchedFields as any} />
+              <RecipientForm
+                control={control}
+                setValue={setValue}
+                errors={errors as any}
+                touched={touchedFields as any}
+              />
             </div>
             <div className="space-y-6 lg:col-span-2">
               {/* FE-5: Pasar props reales de GPS al CoverageMap (contingencia GPS) */}
-              <CoverageMap 
+              <CoverageMap
                 estadoGps={estadoGps ?? undefined}
                 paqueteId={paqueteId ?? undefined}
                 onCoordinatesUpdate={(lat, lon) => {
@@ -226,7 +247,11 @@ export function AdmissionPage() {
                   }, 1500);
                 }}
               />
-              <ShippingInfoSection control={control} errors={errors as any} touched={touchedFields as any} />
+              <ShippingInfoSection
+                control={control}
+                errors={errors as any}
+                touched={touchedFields as any}
+              />
               <div className="space-y-3">
                 <Button
                   type="submit"
@@ -248,8 +273,8 @@ export function AdmissionPage() {
                 </Button>
               </div>
             </div>
-           </div>
-         </form>
+          </div>
+        </form>
 
         <Alert className="mt-8">
           <Info className="h-4 w-4" />

@@ -296,11 +296,15 @@ export class PackageMapper {
       dto.status as PackageStatus,
       dto.cargoCategory as CargoCategory | undefined,
       dto.routeId,
-       dto.statusHistory.map(
-         (h) =>
-           new StatusHistoryEntry(h.status as PackageStatus, new Date(h.timestamp + 'Z'), h.updatedBy),
-       ),
-       new Date(dto.createdAt + 'Z'),
+      dto.statusHistory.map(
+        (h) =>
+          new StatusHistoryEntry(
+            h.status as PackageStatus,
+            new Date(h.timestamp + "Z"),
+            h.updatedBy,
+          ),
+      ),
+      new Date(dto.createdAt + "Z"),
     );
   }
 
@@ -373,21 +377,21 @@ export class PackageMapper {
     const domainMerch = BACKEND_TO_DOMAIN_MERCHANDISE[raw.tipoMercancia] || raw.tipoMercancia;
     const domainPay = BACKEND_TO_DOMAIN_PAYMENT[raw.metodoPago] || raw.metodoPago;
 
-     return new Package(
-       raw.id,
-       sender,
-       recipient,
-       domainMerch as MerchandiseType,
-       raw.valorDeclarado ? DeclaredValue.create(raw.valorDeclarado) : undefined,
-       domainPay as PaymentMethod,
-       weight,
-       dimensions,
-       domainStatus,
-       undefined,
-       undefined,
-       [],
-       new Date(raw.fechaIngresoUtc + 'Z'),
-     );
+    return new Package(
+      raw.id,
+      sender,
+      recipient,
+      domainMerch as MerchandiseType,
+      raw.valorDeclarado ? DeclaredValue.create(raw.valorDeclarado) : undefined,
+      domainPay as PaymentMethod,
+      weight,
+      dimensions,
+      domainStatus,
+      undefined,
+      undefined,
+      [],
+      new Date(raw.fechaIngresoUtc + "Z"),
+    );
   }
 
   static domainToAdmissionRequest(domain: Package, sedeId: string): AdmissionRequestDTO {
@@ -421,12 +425,12 @@ export class PackageMapper {
         correoElectronico: domain.recipient.email,
         direccion: dirDestino,
       },
-       direccionDestino: dirDestino,
-       peso: domain.weight?.value,
-       largo: domain.dimensions?.lengthCm,
-       ancho: domain.dimensions?.widthCm,
-       alto: domain.dimensions?.heightCm,
-       tipoMercancia: mapMerch(domain.merchandiseType),
+      direccionDestino: dirDestino,
+      peso: domain.weight?.value,
+      largo: domain.dimensions?.lengthCm,
+      ancho: domain.dimensions?.widthCm,
+      alto: domain.dimensions?.heightCm,
+      tipoMercancia: mapMerch(domain.merchandiseType),
       valorDeclarado: domain.declaredValue?.amount ?? 0,
       metodoPago: mapPay(domain.paymentMethod),
       sedeId,

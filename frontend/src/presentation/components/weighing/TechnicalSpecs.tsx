@@ -60,29 +60,26 @@ export function TechnicalSpecs({
         onDimensionsRaw?.(newLength, newWidth, newHeight);
       }
     },
-    [onDimensionsChange, onDimensionsRaw]
+    [onDimensionsChange, onDimensionsRaw],
   );
 
   const handleLengthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
-    const newLength =
-      value === "" ? 0 : isNaN(parseFloat(value)) ? 0 : parseFloat(value);
+    const newLength = value === "" ? 0 : isNaN(parseFloat(value)) ? 0 : parseFloat(value);
     setLength(newLength);
     updateDimensions(newLength, width, height);
   };
 
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
-    const newWidth =
-      value === "" ? 0 : isNaN(parseFloat(value)) ? 0 : parseFloat(value);
+    const newWidth = value === "" ? 0 : isNaN(parseFloat(value)) ? 0 : parseFloat(value);
     setWidth(newWidth);
     updateDimensions(length, newWidth, height);
   };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
-    const newHeight =
-      value === "" ? 0 : isNaN(parseFloat(value)) ? 0 : parseFloat(value);
+    const newHeight = value === "" ? 0 : isNaN(parseFloat(value)) ? 0 : parseFloat(value);
     setHeight(newHeight);
     updateDimensions(length, width, newHeight);
   };
@@ -128,15 +125,10 @@ export function TechnicalSpecs({
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15 text-accent">
             <Ruler className="h-4 w-4" />
           </span>
-          <h2 className="text-sm font-bold text-foreground">
-            Especificaciones Técnicas
-          </h2>
+          <h2 className="text-sm font-bold text-foreground">Especificaciones Técnicas</h2>
         </div>
         <div className="flex items-center space-x-2">
-          <Label
-            htmlFor="irregular-switch"
-            className="text-xs font-bold text-muted-foreground"
-          >
+          <Label htmlFor="irregular-switch" className="text-xs font-bold text-muted-foreground">
             Forma Irregular
           </Label>
           <Switch
@@ -154,12 +146,10 @@ export function TechnicalSpecs({
         <Alert variant="default" className="mb-4 flex items-center gap-3">
           <PackageSearch className="h-5 w-5 text-primary" />
           <div>
-            <AlertTitle className="font-bold">
-              Modo de Medición Irregular
-            </AlertTitle>
+            <AlertTitle className="font-bold">Modo de Medición Irregular</AlertTitle>
             <AlertDescription className="text-xs">
-              Mida el paquete usando las dimensiones de la caja contenedora
-              mínima imaginaria que lo envuelve.
+              Mida el paquete usando las dimensiones de la caja contenedora mínima imaginaria que lo
+              envuelve.
             </AlertDescription>
           </div>
         </Alert>
@@ -176,14 +166,10 @@ export function TechnicalSpecs({
             value={length || ""}
             onChange={handleLengthChange}
             onBlur={() => setTouchedLength(true)}
-            className={
-              getLengthError() ? "border-destructive" : ""
-            }
+            className={getLengthError() ? "border-destructive" : ""}
           />
           {getLengthError() && (
-            <p className="text-xs text-destructive font-medium">
-              {getLengthError()}
-            </p>
+            <p className="text-xs text-destructive font-medium">{getLengthError()}</p>
           )}
         </div>
         <div className="space-y-1.5">
@@ -196,14 +182,10 @@ export function TechnicalSpecs({
             value={width || ""}
             onChange={handleWidthChange}
             onBlur={() => setTouchedWidth(true)}
-            className={
-              getWidthError() ? "border-destructive" : ""
-            }
+            className={getWidthError() ? "border-destructive" : ""}
           />
           {getWidthError() && (
-            <p className="text-xs text-destructive font-medium">
-              {getWidthError()}
-            </p>
+            <p className="text-xs text-destructive font-medium">{getWidthError()}</p>
           )}
         </div>
         <div className="space-y-1.5">
@@ -216,14 +198,10 @@ export function TechnicalSpecs({
             value={height || ""}
             onChange={handleHeightChange}
             onBlur={() => setTouchedHeight(true)}
-            className={
-              getHeightError() ? "border-destructive" : ""
-            }
+            className={getHeightError() ? "border-destructive" : ""}
           />
           {getHeightError() && (
-            <p className="text-xs text-destructive font-medium">
-              {getHeightError()}
-            </p>
+            <p className="text-xs text-destructive font-medium">{getHeightError()}</p>
           )}
         </div>
       </div>
@@ -246,13 +224,9 @@ export function TechnicalSpecs({
           </span>
         </div>
         {getWeightError() && (
-          <p className="text-xs text-destructive font-medium">
-            {getWeightError()}
-          </p>
+          <p className="text-xs text-destructive font-medium">{getWeightError()}</p>
         )}
-        <p className="text-[11px] italic text-muted-foreground">
-          Rango permitido: 0.01 - 70.00 kg
-        </p>
+        <p className="text-[11px] italic text-muted-foreground">Rango permitido: 0.01 - 70.00 kg</p>
       </div>
     </section>
   );

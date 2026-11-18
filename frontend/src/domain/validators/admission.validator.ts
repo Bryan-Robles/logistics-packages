@@ -11,10 +11,7 @@ const numeroDocumentoSchema = z
   .string()
   .min(4, "Número de documento muy corto")
   .max(20, "Número de documento muy largo")
-  .refine(
-    (val) => /^\d+$/.test(val),
-    "El número de documento solo puede contener dígitos",
-  );
+  .refine((val) => /^\d+$/.test(val), "El número de documento solo puede contener dígitos");
 
 // Validador para nombre completo (solo letras y espacios)
 const nombreCompletoSchema = z
@@ -30,27 +27,19 @@ const nombreCompletoSchema = z
 const telefonoSchema = z
   .string()
   .min(1, "El teléfono es requerido")
-  .refine(
-    (val) => {
-      // Limpiar espacios, guiones, paréntesis y prefijo +57 o 57
-      const cleaned = val.replace(/[\s\-()]/g, "").replace(/^(\+57|57)/, "");
-      // Debe tener 7-15 dígitos
-      return /^\d{7,15}$/.test(cleaned);
-    },
-    "El teléfono debe tener entre 7 y 15 dígitos (formato: 301 557 4519 o +57 301 557 4519)",
-  );
+  .refine((val) => {
+    // Limpiar espacios, guiones, paréntesis y prefijo +57 o 57
+    const cleaned = val.replace(/[\s\-()]/g, "").replace(/^(\+57|57)/, "");
+    // Debe tener 7-15 dígitos
+    return /^\d{7,15}$/.test(cleaned);
+  }, "El teléfono debe tener entre 7 y 15 dígitos (formato: 301 557 4519 o +57 301 557 4519)");
 
 // Validador para email
-const emailSchema = z
-  .string()
-  .min(1, "El correo es requerido")
-  .email("El correo debe ser válido");
+const emailSchema = z.string().min(1, "El correo es requerido").email("El correo debe ser válido");
 
 // Schema del remitente
 const remitenteSchema = z.object({
-  tipoDocumento: z.enum(
-    Object.values(DocumentType) as readonly [string, ...string[]],
-  ),
+  tipoDocumento: z.enum(Object.values(DocumentType) as readonly [string, ...string[]]),
   numeroDocumento: numeroDocumentoSchema.refine(
     (val) => val.trim().length > 0,
     "El número de documento es requerido",
@@ -84,10 +73,7 @@ const direccionSchema = z.object({
 
 // Schema principal de admisión
 export const admissionSchema = z.object({
-  sedeId: z
-    .string()
-    .min(1, "Debe seleccionar una sede")
-    .uuid("La sede seleccionada no es válida"),
+  sedeId: z.string().min(1, "Debe seleccionar una sede").uuid("La sede seleccionada no es válida"),
   remitente: remitenteSchema,
   destinatario: destinatarioSchema,
   direccionDestino: direccionSchema,
@@ -95,9 +81,7 @@ export const admissionSchema = z.object({
     .number()
     .min(1, "El valor declarado debe ser mayor a cero")
     .max(50000000, "El valor declarado no puede exceder $50.000.000"),
-  metodoPago: z.enum(
-    Object.values(PaymentMethod) as readonly [string, ...string[]],
-  ),
+  metodoPago: z.enum(Object.values(PaymentMethod) as readonly [string, ...string[]]),
   tipoMercancia: z.unknown().optional(),
   indicadorFormaIrregular: z.boolean().optional(),
   peso: z.unknown().optional(),

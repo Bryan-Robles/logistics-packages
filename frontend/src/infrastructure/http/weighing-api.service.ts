@@ -32,7 +32,7 @@ export interface PesajeRequestDto {
 /**
  * Servicio HTTP para operaciones de pesaje de paquetes.
  * Maneja la comunicación con POST /api/paquetes/pesaje
- * 
+ *
  * Basado en SPEC-FE-002
  */
 export class WeighingApiService {
@@ -44,9 +44,7 @@ export class WeighingApiService {
    * @returns Respuesta con cálculos de peso, precio y alertas
    * @throws Error si la petición falla
    */
-  static async weighPackage(
-    data: WeighingData
-  ): Promise<PesajeResponseDto> {
+  static async weighPackage(data: WeighingData): Promise<PesajeResponseDto> {
     try {
       // FE-4: Las tarifas se eliminan del request (se leen desde backend en BE-3)
       const requestDto: PesajeRequestDto = {
@@ -61,14 +59,14 @@ export class WeighingApiService {
 
       const response = await httpClient.post<PesajeResponseDto>(
         `${this.BASE_URL}/pesaje`,
-        requestDto
+        requestDto,
       );
 
       return response.data;
     } catch (error) {
       const parsedError = parseApiError(error);
       throw new Error(
-        `Error al procesar el pesaje del paquete: ${parsedError.mensaje || "Error desconocido"}`
+        `Error al procesar el pesaje del paquete: ${parsedError.mensaje || "Error desconocido"}`,
       );
     }
   }

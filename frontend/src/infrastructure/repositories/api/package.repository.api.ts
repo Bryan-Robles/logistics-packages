@@ -44,10 +44,8 @@ export class PackageApiRepository implements PackageRepository {
     // Consulte SedesApiService para obtener sedes disponibles y enviar sedeId dinámico
     // Este código legacy queda inactivo pero se mantiene para compatibilidad
 
-
     // FT-1: El pesaje ahora se maneja desde WeighingPage.tsx directamente
     // Este código legacy queda inactivo pero se mantiene para compatibilidad
-
   }
 
   async findAll(): Promise<Package[]> {

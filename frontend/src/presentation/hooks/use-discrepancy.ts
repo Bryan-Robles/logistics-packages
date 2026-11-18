@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { DiscrepancyApiService, UpdatePhysicalDataRequestDTO } from "@/infrastructure/http/discrepancy-api.service";
+import {
+  DiscrepancyApiService,
+  UpdatePhysicalDataRequestDTO,
+} from "@/infrastructure/http/discrepancy-api.service";
 import { toast } from "sonner";
 
 export interface DiscrepancyFormData {
@@ -25,7 +28,10 @@ export function useDiscrepancy() {
     altoCorregido: 0,
   });
 
-  const updateField = <K extends keyof DiscrepancyFormData>(key: K, value: DiscrepancyFormData[K]) => {
+  const updateField = <K extends keyof DiscrepancyFormData>(
+    key: K,
+    value: DiscrepancyFormData[K],
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [key]: value,
@@ -36,7 +42,7 @@ export function useDiscrepancy() {
     pesoOriginal: number | undefined,
     largoOriginal: number | undefined,
     anchoOriginal: number | undefined,
-    altoOriginal: number | undefined
+    altoOriginal: number | undefined,
   ): DiscrepancyDifferences => {
     return {
       pesoDiff:
@@ -63,7 +69,11 @@ export function useDiscrepancy() {
       toast.error("❌ Peso debe ser mayor a 0");
       return false;
     }
-    if (formData.largoCorregido <= 0 || formData.anchoCorregido <= 0 || formData.altoCorregido <= 0) {
+    if (
+      formData.largoCorregido <= 0 ||
+      formData.anchoCorregido <= 0 ||
+      formData.altoCorregido <= 0
+    ) {
       toast.error("❌ Todas las dimensiones deben ser mayores a 0");
       return false;
     }

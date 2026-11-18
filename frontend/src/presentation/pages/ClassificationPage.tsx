@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { ChevronRight, Warehouse, CheckCircle2, Compass, Truck, LoaderCircle, AlertCircle } from "lucide-react";
+import {
+  ChevronRight,
+  Warehouse,
+  CheckCircle2,
+  Compass,
+  Truck,
+  LoaderCircle,
+  AlertCircle,
+} from "lucide-react";
 import { Link, useSearch } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -8,13 +16,16 @@ import { BreadcrumbNav } from "../components/shared/BreadcrumbNav";
 import { PackageInfoCard } from "../components/classification/PackageInfoCard";
 import { DestinationZoneList } from "../components/classification/DestinationZoneList";
 import { toast } from "sonner";
-import { StorageApiService, ClassificationSuggestionDTO } from "@/infrastructure/http/storage-api.service";
+import {
+  StorageApiService,
+  ClassificationSuggestionDTO,
+} from "@/infrastructure/http/storage-api.service";
 
 export function ClassificationPage() {
   const search = useSearch({ from: "/clasificacion" });
   // search ya está tipado por validateSearch de la ruta
   const paqueteId = (search as Record<string, any>).paqueteId as string | undefined;
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -76,7 +87,7 @@ export function ClassificationPage() {
       toast.error("No hay zona sugerida disponible");
       return;
     }
-    
+
     if (!paqueteId) {
       toast.error("ID del paquete no disponible");
       return;
@@ -87,32 +98,32 @@ export function ClassificationPage() {
 
     try {
       await StorageApiService.confirmClassification(paqueteId, suggestion.zonaDestinoId);
-      
+
       toast.dismiss();
       toast.success("Paquete clasificado y listo para despacho.", {
         description: "El estado del paquete ha sido actualizado a 'Listo para Despacho'.",
       });
-      
+
       setIsConfirmed(true);
-     } catch (err: any) {
-       const errorMsg = err.message || "Error al confirmar clasificación";
-       const errorCode = err.codigo || "";
-       setError(errorMsg);
-       toast.dismiss();
-       
-       // Manejo de errores específicos basado en el código
-       if (errorCode === "ZONA_NO_APTA") {
-         toast.error("Zona no apta", {
-           description: "La zona seleccionada no es compatible con este tipo de mercancía.",
-         });
-       } else if (errorCode === "ZONA_DESTINO_SATURADA") {
-         toast.error("Zona saturada", {
-           description: "La zona de destino ha alcanzado su capacidad máxima.",
-         });
-       } else {
-         toast.error(errorMsg);
-       }
-     } finally {
+    } catch (err: any) {
+      const errorMsg = err.message || "Error al confirmar clasificación";
+      const errorCode = err.codigo || "";
+      setError(errorMsg);
+      toast.dismiss();
+
+      // Manejo de errores específicos basado en el código
+      if (errorCode === "ZONA_NO_APTA") {
+        toast.error("Zona no apta", {
+          description: "La zona seleccionada no es compatible con este tipo de mercancía.",
+        });
+      } else if (errorCode === "ZONA_DESTINO_SATURADA") {
+        toast.error("Zona saturada", {
+          description: "La zona de destino ha alcanzado su capacidad máxima.",
+        });
+      } else {
+        toast.error(errorMsg);
+      }
+    } finally {
       setIsConfirming(false);
     }
   };
@@ -189,12 +200,12 @@ export function ClassificationPage() {
 
         {suggestion && !isLoading && (
           <div className="grid gap-6 md:grid-cols-2">
-             <div className="space-y-6">
-               <PackageInfoCard
-                 type={suggestion.tipoMercancia || "Estándar"}
-                 destination={suggestion.ciudadDestino || "Desconocida"}
-                 highlight
-               />
+            <div className="space-y-6">
+              <PackageInfoCard
+                type={suggestion.tipoMercancia || "Estándar"}
+                destination={suggestion.ciudadDestino || "Desconocida"}
+                highlight
+              />
               <section className="rounded-xl border border-primary/30 bg-primary/5 p-6">
                 <div className="flex items-start gap-4">
                   <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
@@ -206,14 +217,11 @@ export function ClassificationPage() {
                     </p>
                     <p className="text-lg font-bold text-foreground">{suggestion.nombreZona}</p>
                     <p className="text-xs text-muted-foreground">
-                      Código: {suggestion.codigoZona} | Calculado por proximidad geográfica del destino.
+                      Código: {suggestion.codigoZona} | Calculado por proximidad geográfica del
+                      destino.
                     </p>
                   </div>
-                  <Button 
-                    size="sm" 
-                    disabled={isConfirming || isConfirmed} 
-                    onClick={handleConfirm}
-                  >
+                  <Button size="sm" disabled={isConfirming || isConfirmed} onClick={handleConfirm}>
                     {isConfirming ? (
                       <>
                         <LoaderCircle className="mr-2 h-3 w-3 animate-spin" />
@@ -226,7 +234,7 @@ export function ClassificationPage() {
                 </div>
               </section>
             </div>
-            <DestinationZoneList 
+            <DestinationZoneList
               zones={availableZones}
               suggestedZoneId={suggestion.zonaDestinoId}
               confirmed={isConfirmed}

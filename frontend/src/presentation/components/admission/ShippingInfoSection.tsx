@@ -19,11 +19,7 @@ interface ShippingInfoSectionProps {
   touched?: any;
 }
 
-export function ShippingInfoSection({
-  control,
-  errors,
-  touched,
-}: ShippingInfoSectionProps) {
+export function ShippingInfoSection({ control, errors, touched }: ShippingInfoSectionProps) {
   return (
     <FormCard
       icon={<Truck className="h-4 w-4" />}
@@ -56,9 +52,7 @@ export function ShippingInfoSection({
             render={({ field }) => (
               <Input
                 className={`pl-7 ${
-                  touched?.valorDeclarado && errors?.valorDeclarado
-                    ? "border-destructive"
-                    : ""
+                  touched?.valorDeclarado && errors?.valorDeclarado ? "border-destructive" : ""
                 }`}
                 placeholder="1000"
                 type="number"
@@ -89,11 +83,7 @@ export function ShippingInfoSection({
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger
-                className={
-                  touched?.metodoPago && errors?.metodoPago
-                    ? "border-destructive"
-                    : ""
-                }
+                className={touched?.metodoPago && errors?.metodoPago ? "border-destructive" : ""}
               >
                 <SelectValue />
               </SelectTrigger>

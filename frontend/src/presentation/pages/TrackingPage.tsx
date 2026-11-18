@@ -23,20 +23,48 @@ import { toast } from "sonner";
 const estadoColores: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
   RECIBIDO_EN_SEDE: { bg: "bg-blue/10", text: "text-blue", icon: <Package className="h-5 w-5" /> },
   EN_CLASIFICACION: { bg: "bg-amber/10", text: "text-amber", icon: <Clock className="h-5 w-5" /> },
-  LISTO_PARA_DESPACHO: { bg: "bg-indigo/10", text: "text-indigo", icon: <FileText className="h-5 w-5" /> },
+  LISTO_PARA_DESPACHO: {
+    bg: "bg-indigo/10",
+    text: "text-indigo",
+    icon: <FileText className="h-5 w-5" />,
+  },
   EN_TRANSITO: { bg: "bg-cyan/10", text: "text-cyan", icon: <Truck className="h-5 w-5" /> },
-  EN_PARADA_DE_ENTREGA: { bg: "bg-purple/10", text: "text-purple", icon: <MapPin className="h-5 w-5" /> },
-  ENTREGADO: { bg: "bg-success/10", text: "text-success", icon: <CheckCircle className="h-5 w-5" /> },
-  NOVEDAD_EN_BODEGA: { bg: "bg-warning/10", text: "text-warning", icon: <AlertCircle className="h-5 w-5" /> },
-  DEVOLUCION_EN_RUTA: { bg: "bg-orange/10", text: "text-orange", icon: <Truck className="h-5 w-5" /> },
-  EXTRAVIADO_EN_RUTA: { bg: "bg-destructive/10", text: "text-destructive", icon: <AlertCircle className="h-5 w-5" /> },
-  DAÑADO_EN_RUTA: { bg: "bg-destructive/10", text: "text-destructive", icon: <AlertCircle className="h-5 w-5" /> },
+  EN_PARADA_DE_ENTREGA: {
+    bg: "bg-purple/10",
+    text: "text-purple",
+    icon: <MapPin className="h-5 w-5" />,
+  },
+  ENTREGADO: {
+    bg: "bg-success/10",
+    text: "text-success",
+    icon: <CheckCircle className="h-5 w-5" />,
+  },
+  NOVEDAD_EN_BODEGA: {
+    bg: "bg-warning/10",
+    text: "text-warning",
+    icon: <AlertCircle className="h-5 w-5" />,
+  },
+  DEVOLUCION_EN_RUTA: {
+    bg: "bg-orange/10",
+    text: "text-orange",
+    icon: <Truck className="h-5 w-5" />,
+  },
+  EXTRAVIADO_EN_RUTA: {
+    bg: "bg-destructive/10",
+    text: "text-destructive",
+    icon: <AlertCircle className="h-5 w-5" />,
+  },
+  DAÑADO_EN_RUTA: {
+    bg: "bg-destructive/10",
+    text: "text-destructive",
+    icon: <AlertCircle className="h-5 w-5" />,
+  },
 };
 
 export function TrackingPage() {
   const navigate = useNavigate();
   const { paqueteId } = useSearch({ from: "/tracking" });
-  
+
   const [tracking, setTracking] = useState<TrackingPaqueteDTO | null>(null);
   const [isLoading, setIsLoading] = useState(paqueteId ? true : false);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +106,10 @@ export function TrackingPage() {
 
   if (isLoading) {
     return (
-      <AppLayout icon={<Truck className="h-5 w-5 text-primary-foreground" />} title="HERMES EXPRESS">
+      <AppLayout
+        icon={<Truck className="h-5 w-5 text-primary-foreground" />}
+        title="HERMES EXPRESS"
+      >
         <main className="mx-auto max-w-7xl px-6 py-8 flex items-center justify-center min-h-96">
           <Loader2 className="h-8 w-8 animate-spin mr-2" />
           <span>Cargando tracking...</span>
@@ -90,10 +121,13 @@ export function TrackingPage() {
   // Si no hay paqueteId, mostrar formulario de búsqueda
   if (!paqueteId) {
     return (
-      <AppLayout icon={<Truck className="h-5 w-5 text-primary-foreground" />} title="HERMES EXPRESS">
+      <AppLayout
+        icon={<Truck className="h-5 w-5 text-primary-foreground" />}
+        title="HERMES EXPRESS"
+      >
         <main className="mx-auto max-w-7xl px-6 py-8">
           <BreadcrumbNav items={[{ label: "Seguimiento de Paquetes" }]} />
-          
+
           <div className="mb-8">
             <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Seguimiento de Paquete
@@ -137,7 +171,10 @@ export function TrackingPage() {
 
   if (error || !tracking) {
     return (
-      <AppLayout icon={<Truck className="h-5 w-5 text-primary-foreground" />} title="HERMES EXPRESS">
+      <AppLayout
+        icon={<Truck className="h-5 w-5 text-primary-foreground" />}
+        title="HERMES EXPRESS"
+      >
         <main className="mx-auto max-w-7xl px-6 py-8">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -197,14 +234,18 @@ export function TrackingPage() {
                   <p className="mt-1 text-foreground">{tracking.destinatarioNombre || "N/A"}</p>
                 </div>
                 <div className="sm:col-span-2">
-                  <p className="text-sm font-semibold text-muted-foreground">Dirección de Destino</p>
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    Dirección de Destino
+                  </p>
                   <p className="mt-1 text-foreground">
                     {tracking.ciudadDestino}, {tracking.departamentoDestino}
                   </p>
                 </div>
                 {tracking.distanciaEstimadaKm != null && tracking.distanciaEstimadaKm > 0 && (
                   <div>
-                    <p className="text-sm font-semibold text-muted-foreground">Distancia Estimada</p>
+                    <p className="text-sm font-semibold text-muted-foreground">
+                      Distancia Estimada
+                    </p>
                     <p className="mt-1 text-foreground">{tracking.distanciaEstimadaKm} km</p>
                   </div>
                 )}
@@ -219,7 +260,9 @@ export function TrackingPage() {
 
             {/* Timeline */}
             <section className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-              <h2 className="mb-4 text-base font-bold text-foreground">Historial de Transiciones</h2>
+              <h2 className="mb-4 text-base font-bold text-foreground">
+                Historial de Transiciones
+              </h2>
               <div className="space-y-4">
                 {tracking.historial.length > 0 ? (
                   tracking.historial.map((item, idx) => (
@@ -241,7 +284,12 @@ export function TrackingPage() {
                           {new Date(item.fechaTransicionUtc).toLocaleString("es-CO")}
                         </p>
                         {item.urlEvidencia && (
-                          <a href={item.urlEvidencia} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">
+                          <a
+                            href={item.urlEvidencia}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs text-primary hover:underline"
+                          >
                             Ver evidencia
                           </a>
                         )}
@@ -257,16 +305,25 @@ export function TrackingPage() {
             {/* Evidencia de entrega */}
             {tracking.fechaEntregaUtc && (
               <section className="rounded-xl border border-success/20 bg-success/5 p-6">
-                <h2 className="mb-4 text-base font-bold text-foreground">Confirmación de Entrega</h2>
+                <h2 className="mb-4 text-base font-bold text-foreground">
+                  Confirmación de Entrega
+                </h2>
                 <div className="space-y-2">
                   <p className="text-sm">
-                    <span className="font-semibold">Entregado a:</span> {tracking.nombreFirmante || "N/A"}
+                    <span className="font-semibold">Entregado a:</span>{" "}
+                    {tracking.nombreFirmante || "N/A"}
                   </p>
                   <p className="text-sm">
-                    <span className="font-semibold">Fecha:</span> {new Date(tracking.fechaEntregaUtc).toLocaleString("es-CO")}
+                    <span className="font-semibold">Fecha:</span>{" "}
+                    {new Date(tracking.fechaEntregaUtc).toLocaleString("es-CO")}
                   </p>
                   {tracking.urlEvidenciaEntrega && (
-                    <a href={tracking.urlEvidenciaEntrega} target="_blank" rel="noreferrer" className="text-sm text-primary hover:underline">
+                    <a
+                      href={tracking.urlEvidenciaEntrega}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-primary hover:underline"
+                    >
                       Ver prueba de entrega
                     </a>
                   )}
@@ -281,7 +338,7 @@ export function TrackingPage() {
               <p className="text-xs font-bold uppercase text-muted-foreground">ID del Paquete</p>
               <p className="mt-2 font-mono text-sm break-all">{tracking.paqueteId}</p>
             </div>
-            
+
             <Button onClick={() => navigate({ to: "/" })} variant="outline" className="w-full">
               Volver al Inicio
             </Button>

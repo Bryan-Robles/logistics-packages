@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 /**
  * Contexto global para el flujo de admisión de paquetes (FE-1)
- * 
+ *
  * Persiste el estado entre AdmissionPage → WeighingPage:
  * - paqueteId: ID generado por el backend tras POST /api/paquetes/admision
  * - etiquetaDigital: Etiqueta única del paquete (ej: PK-xxxxx)
@@ -43,16 +43,12 @@ interface AdmissionContextType {
   clearAdmission: () => void;
 }
 
-const AdmissionContext = createContext<AdmissionContextType | undefined>(
-  undefined
-);
+const AdmissionContext = createContext<AdmissionContextType | undefined>(undefined);
 
 export function AdmissionProvider({ children }: { children: ReactNode }) {
   const [paqueteId, setPaqueteId] = useState<string | null>(null);
   const [etiquetaDigital, setEtiquetaDigital] = useState<string | null>(null);
-  const [estadoGps, setEstadoGps] = useState<"PENDIENTE" | "RESUELTO" | null>(
-    null
-  );
+  const [estadoGps, setEstadoGps] = useState<"PENDIENTE" | "RESUELTO" | null>(null);
   const [estado, setEstado] = useState<string | null>(null);
   const [sedeId, setSedeId] = useState<string | null>(null);
   const [sedeNombre, setSedeNombre] = useState<string | null>(null);

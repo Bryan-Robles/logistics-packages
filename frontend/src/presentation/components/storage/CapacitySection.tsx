@@ -21,7 +21,8 @@ export function CapacitySection({
   // Calcular porcentajes
   const pctPeso = capacidadMaxKg > 0 ? Math.round((pesoActualKg / capacidadMaxKg) * 100) : 0;
   const pctVolumen = capacidadMaxM3 > 0 ? Math.round((volumenActualM3 / capacidadMaxM3) * 100) : 0;
-  const pctPaquetes = capacidadMaxPaquetes > 0 ? Math.round((contadorPaquetes / capacidadMaxPaquetes) * 100) : 0;
+  const pctPaquetes =
+    capacidadMaxPaquetes > 0 ? Math.round((contadorPaquetes / capacidadMaxPaquetes) * 100) : 0;
 
   // Formatear valores
   const pesoFormatted = `${pesoActualKg.toFixed(1)} / ${capacidadMaxKg.toFixed(1)} Kg`;
@@ -36,8 +37,18 @@ export function CapacitySection({
       </div>
       <div className="space-y-3 text-sm">
         <CapacityBar label="Peso Total" value={pesoFormatted} pct={pctPeso} color="bg-warning" />
-        <CapacityBar label="Volumen (m³)" value={volumenFormatted} pct={pctVolumen} color="bg-primary" />
-        <CapacityBar label="Cantidad Paquetes" value={paquetesFormatted} pct={pctPaquetes} color="bg-success" />
+        <CapacityBar
+          label="Volumen (m³)"
+          value={volumenFormatted}
+          pct={pctVolumen}
+          color="bg-primary"
+        />
+        <CapacityBar
+          label="Cantidad Paquetes"
+          value={paquetesFormatted}
+          pct={pctPaquetes}
+          color="bg-success"
+        />
       </div>
     </section>
   );
