@@ -48,8 +48,8 @@ public class RutaSqsAdapter implements RutaQueuePort {
                 .latitud(paquete.getCoordenadas() != null ? paquete.getCoordenadas().latitud() : null)
                 .longitud(paquete.getCoordenadas() != null ? paquete.getCoordenadas().longitud() : null)
                 .fechaLimiteEntrega(calcularFechaLimite(paquete.getFechaIngresoUtc()))
-                .tipoMercancia(paquete.getTipoMercancia().name())
-                .metodoPago(paquete.getMetodoPago().name())
+                .tipoMercancia(paquete.getTipoMercancia() != null ? paquete.getTipoMercancia().name() : null)
+                .metodoPago(paquete.getMetodoPago() != null ? paquete.getMetodoPago().name() : null)
                 .build();
     }
 

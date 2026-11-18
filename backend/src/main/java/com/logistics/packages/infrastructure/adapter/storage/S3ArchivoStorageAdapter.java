@@ -15,6 +15,8 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 import java.io.IOException;
@@ -32,6 +34,7 @@ public class S3ArchivoStorageAdapter implements ArchivoStoragePort {
 
     private final S3Template s3Template;
     private final S3Client s3Client;
+    private final AwsCredentialsProvider credentialsProvider;
 
     @Value("${aws.s3.bucket-name:logistics-packages}")
     private String bucketName;
@@ -133,9 +136,14 @@ public class S3ArchivoStorageAdapter implements ArchivoStoragePort {
     private S3Presigner obtenerPresigner() {
         if (presigner == null) {
             var builder = S3Presigner.builder()
-                    .region(Region.of(awsRegion));
+                    .region(Region.of(awsRegion))
+                    .credentialsProvider(credentialsProvider);
             if (s3Endpoint != null && !s3Endpoint.isBlank()) {
-                builder.endpointOverride(URI.create(s3Endpoint));
+                // Custom endpoint (LocalStack): path-style URLs, like the S3Client
+                builder.endpointOverride(URI.create(s3Endpoint))
+                        .serviceConfiguration(S3Configuration.builder()
+                                .pathStyleAccessEnabled(true)
+                                .build());
             }
             presigner = builder.build();
         }

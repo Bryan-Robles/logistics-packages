@@ -1,6 +1,8 @@
 package com.logistics.packages.application.usecase;
 
+import com.logistics.packages.application.repository.HistorialEstadoRepository;
 import com.logistics.packages.application.repository.PaqueteRepository;
+import com.logistics.packages.domain.model.HistorialEstado;
 import com.logistics.packages.domain.exception.PaqueteNotFoundException;
 import com.logistics.packages.domain.model.Paquete;
 import com.logistics.packages.domain.valueobject.EstadoPaquete;
@@ -26,6 +28,9 @@ class AsignarRutaUseCaseTest {
 
     @Mock
     private PaqueteRepository paqueteRepository;
+
+    @Mock
+    private HistorialEstadoRepository historialEstadoRepository;
 
     @InjectMocks
     private AsignarRutaUseCase asignarRutaUseCase;
@@ -63,7 +68,9 @@ class AsignarRutaUseCaseTest {
 
         Paquete paqueteGuardado = paqueteCaptor.getValue();
         assertEquals(rutaId, paqueteGuardado.getRutaId());
-        assertEquals(EstadoPaquete.LISTO_PARA_DESPACHO, paqueteGuardado.getEstado());
+        // La asignación de ruta no cambia el estado; se registra como evento informativo
+        assertEquals(EstadoPaquete.RECIBIDO_EN_SEDE, paqueteGuardado.getEstado());
+        verify(historialEstadoRepository).guardar(any(HistorialEstado.class));
     }
 
     @Test

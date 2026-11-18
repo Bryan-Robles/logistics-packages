@@ -260,8 +260,9 @@ class RegistrarNovedadUseCaseTest {
 
         RegistrarNovedadCommand command = new RegistrarNovedadCommand(
             paqueteId,
-            TipoNovedad.DAÑADO,
-            "Daños detectados",
+            // EXTRAVIADO no exige evidencia: aísla el escenario de fallo de notificación
+            TipoNovedad.EXTRAVIADO,
+            "Paquete no encontrado en bodega",
             usuarioId,
             null
         );

@@ -1,6 +1,8 @@
 package com.logistics.packages.application.usecase;
 
+import com.logistics.packages.application.ports.SedeRepository;
 import com.logistics.packages.application.repository.ArchivoStoragePort;
+import com.logistics.packages.application.repository.HistorialEstadoRepository;
 import com.logistics.packages.application.repository.CoverageService;
 import com.logistics.packages.application.repository.DistanceService;
 import com.logistics.packages.application.repository.GeocodingService;
@@ -9,6 +11,7 @@ import com.logistics.packages.application.repository.PriceCalculationService;
 import com.logistics.packages.domain.event.SolicitudRutaEvent;
 import com.logistics.packages.domain.model.Paquete;
 import com.logistics.packages.domain.model.Persona;
+import com.logistics.packages.domain.model.Sede;
 import com.logistics.packages.domain.valueobject.TipoDocumento;
 import com.logistics.packages.domain.valueobject.Coordenadas;
 import com.logistics.packages.domain.valueobject.Direccion;
@@ -50,12 +53,21 @@ class RegistrarAdmisionUseCaseTest {
     @Mock
     private ArchivoStoragePort archivoStoragePort;
 
+    @Mock
+    private HistorialEstadoRepository historialEstadoRepository;
+
+    @Mock
+    private SedeRepository sedeRepository;
+
     @InjectMocks
     private RegistrarAdmisionUseCase registrarAdmisionUseCase;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        // La distancia se calcula desde las coordenadas reales de la sede seleccionada
+        Sede sede = Sede.builder().latitud(4.624335).longitud(-74.063644).build();
+        when(sedeRepository.findById(any())).thenReturn(Optional.of(sede));
     }
 
     private RegistroAdmisionCommand.RegistroAdmisionCommandBuilder createBaseCommandBuilder() {
@@ -86,7 +98,7 @@ class RegistrarAdmisionUseCaseTest {
         when(geocodingService.localizar(command.direccionDestino())).thenReturn(Optional.of(coordenadas));
         when(coverageService.isWithinCoverage(coordenadas)).thenReturn(true);
         when(priceCalculationService.calculatePrice(any(), anyDouble())).thenReturn(new BigDecimal("5000"));
-        when(distanceService.calcularDistanciaDesdeSede(coordenadas)).thenReturn(150.0);
+        when(distanceService.calcularDistanciaDesdeSede(any(), any())).thenReturn(150.0);
 
         UUID paqueteIdMock = UUID.randomUUID();
         Paquete paqueteGuardado = mock(Paquete.class);
@@ -108,7 +120,7 @@ class RegistrarAdmisionUseCaseTest {
 
         when(coverageService.isWithinCoverage(command.coordenadasManuales())).thenReturn(true);
         when(priceCalculationService.calculatePrice(any(), anyDouble())).thenReturn(new BigDecimal("5000"));
-        when(distanceService.calcularDistanciaDesdeSede(command.coordenadasManuales())).thenReturn(150.0);
+        when(distanceService.calcularDistanciaDesdeSede(any(), any())).thenReturn(150.0);
 
         Paquete paqueteGuardado = mock(Paquete.class);
         when(paqueteGuardado.getId()).thenReturn(UUID.randomUUID());
@@ -153,7 +165,7 @@ class RegistrarAdmisionUseCaseTest {
         when(geocodingService.localizar(any())).thenReturn(Optional.of(new Coordenadas(4.5, -74.5)));
         when(coverageService.isWithinCoverage(any())).thenReturn(true);
         when(priceCalculationService.calculatePrice(any(), anyDouble())).thenReturn(new BigDecimal("10000"));
-        when(distanceService.calcularDistanciaDesdeSede(any())).thenReturn(150.0);
+        when(distanceService.calcularDistanciaDesdeSede(any(), any())).thenReturn(150.0);
         when(paqueteRepository.save(any(Paquete.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         registrarAdmisionUseCase.registrarAdmision(command);
@@ -177,7 +189,7 @@ class RegistrarAdmisionUseCaseTest {
         when(geocodingService.localizar(any())).thenReturn(Optional.of(new Coordenadas(4.5, -74.5)));
         when(coverageService.isWithinCoverage(any())).thenReturn(true);
         when(priceCalculationService.calculatePrice(any(), anyDouble())).thenReturn(new BigDecimal("10000"));
-        when(distanceService.calcularDistanciaDesdeSede(any())).thenReturn(150.0);
+        when(distanceService.calcularDistanciaDesdeSede(any(), any())).thenReturn(150.0);
         when(paqueteRepository.save(any(Paquete.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         registrarAdmisionUseCase.registrarAdmision(command);

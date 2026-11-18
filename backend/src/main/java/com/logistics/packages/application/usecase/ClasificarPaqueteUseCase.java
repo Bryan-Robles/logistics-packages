@@ -7,7 +7,6 @@ import com.logistics.packages.application.ports.ZonaDestinoRepository;
 import com.logistics.packages.domain.exception.PaqueteNotFoundException;
 import com.logistics.packages.domain.exception.ZonaDestinoNotFoundException;
 import com.logistics.packages.domain.exception.ZonaDestinoSaturadaException;
-import com.logistics.packages.domain.exception.ZonaNoAptaException;
 import com.logistics.packages.domain.model.HistorialEstado;
 import com.logistics.packages.domain.model.Paquete;
 import com.logistics.packages.domain.model.ZonaDestino;
@@ -93,7 +92,6 @@ public class ClasificarPaqueteUseCase {
      * @param zonaDestinoId El ID de la zona de destino confirmada
      * @throws PaqueteNotFoundException si el paquete no existe
      * @throws ZonaDestinoNotFoundException si la zona no existe
-     * @throws ZonaNoAptaException si la zona no es apta para el tipo de mercancía
      * @throws ZonaDestinoSaturadaException si la zona ha alcanzado su capacidad máxima
      */
     public void confirmarClasificacion(UUID paqueteId, UUID zonaDestinoId, MultipartFile evidencia) {
