@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { AdmissionControl, AdmissionErrors } from "./form-types";
+import type { AdmissionControl, AdmissionErrors, AdmissionTouched } from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
@@ -16,7 +16,7 @@ import { DocumentType, DocumentTypeLabel } from "@/domain/enums/document-type.en
 interface SenderFormProps {
   control: AdmissionControl;
   errors?: AdmissionErrors;
-  touched?: any;
+  touched?: AdmissionTouched;
 }
 
 export function SenderForm({ control, errors, touched }: SenderFormProps) {

@@ -1,7 +1,11 @@
 import api from "../../api/http-client";
 import { Novelty } from "../../../domain/entities/novelty.entity";
 import { NoveltyRepository } from "../../../domain/ports/novelty-repository.port";
-import { NoveltyMapper, BackendNovedadResponseDTO } from "../../mappers/novelty.mapper";
+import {
+  NoveltyMapper,
+  BackendNovedadResponseDTO,
+  type HistorialNovedadDTO,
+} from "../../mappers/novelty.mapper";
 import { isValidUUID } from "../../../lib/uuid";
 
 export class NoveltyApiRepository implements NoveltyRepository {
@@ -17,7 +21,7 @@ export class NoveltyApiRepository implements NoveltyRepository {
 
   async findAll(): Promise<Novelty[]> {
     try {
-      const response = await api.get<any[]>("/api/paquetes/novedades");
+      const response = await api.get<HistorialNovedadDTO[]>("/api/paquetes/novedades");
       const novelties = response.data.map((item) => NoveltyMapper.fromHistorialItemDto(item));
       // FE-4 Fix: Poblar localCache para que findById() funcione en notify/close
       novelties.forEach((n) => this.localCache.set(n.id, n));

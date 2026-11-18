@@ -31,7 +31,7 @@ export function NoveltyControlPage() {
         toast.error("No se pudieron cargar las novedades");
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [findAll]);
 
   const handleNotify = async () => {
     if (!selectedNovedad) return;

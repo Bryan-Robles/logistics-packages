@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import {
   getStoredToken,
   getStoredUser,
@@ -9,16 +9,7 @@ import {
   logout as authLogout,
   type AuthUser,
 } from "../infrastructure/api/auth.api";
-
-export interface AuthContextType {
-  user: AuthUser | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  setAuth: (token: string, user: AuthUser) => void;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
+import { AuthContext } from "./auth-context";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
@@ -58,10 +49,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth(): AuthContextType {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
 }

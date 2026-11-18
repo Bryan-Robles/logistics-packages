@@ -1,4 +1,4 @@
-import httpClient, { parseApiError } from "../api/http-client";
+import httpClient, { toApiError } from "../api/http-client";
 import { toFormData, MULTIPART_HEADERS } from "../api/form-data";
 
 /**
@@ -125,11 +125,7 @@ export class StorageApiService {
       );
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error desconocido");
     }
   }
 
@@ -160,11 +156,7 @@ export class StorageApiService {
       );
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error desconocido");
     }
   }
 
@@ -184,11 +176,7 @@ export class StorageApiService {
       );
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error desconocido");
     }
   }
 
@@ -204,11 +192,7 @@ export class StorageApiService {
       );
       return response.data || [];
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error desconocido");
     }
   }
 
@@ -238,11 +222,7 @@ export class StorageApiService {
       );
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error desconocido") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error desconocido");
     }
   }
 }

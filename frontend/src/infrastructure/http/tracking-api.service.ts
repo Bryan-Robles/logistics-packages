@@ -1,4 +1,4 @@
-import httpClient, { parseApiError } from "../api/http-client";
+import httpClient, { toApiError } from "../api/http-client";
 
 /**
  * DTO: Historial de transiciones de estado
@@ -58,11 +58,7 @@ export class TrackingApiService {
       );
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error al obtener tracking") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error al obtener tracking");
     }
   }
 }

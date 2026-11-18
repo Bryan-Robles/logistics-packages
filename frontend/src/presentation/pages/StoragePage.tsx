@@ -25,6 +25,7 @@ import {
 } from "@/infrastructure/http/storage-api.service";
 import { useAdmission } from "@/lib/admission-context";
 import { useCases } from "@/lib/di";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 export function StoragePage() {
   const navigate = useNavigate();
@@ -61,7 +62,8 @@ export function StoragePage() {
       setSuggestion(result);
       toast.dismiss();
       toast.success(`Zona sugerida: ${result.nombreZona}`);
-    } catch (err: any) {
+    } catch (caught) {
+      const err = errorInfo(caught);
       const errorMsg = err.message || "Error al buscar el paquete";
       const errorCode = err.codigo || "";
       setError(errorMsg);
@@ -92,7 +94,8 @@ export function StoragePage() {
       setTimeout(() => {
         navigate({ to: "/clasificacion", search: { paqueteId: suggestion.paqueteId } });
       }, 1000);
-    } catch (err: any) {
+    } catch (caught) {
+      const err = errorInfo(caught);
       const errorMsg = err.message || "Error al confirmar almacenaje";
       const errorCode = err.codigo || "";
       setError(errorMsg);

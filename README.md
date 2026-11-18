@@ -92,7 +92,7 @@ Para desarrollar cada parte por separado, ver [backend/README.md](backend/README
 ```bash
 cd backend && ./gradlew test         # 208 tests: unitarios + integración con Testcontainers (requiere Docker)
 cd frontend && npx tsc --noEmit      # 0 errores de tipos
-cd frontend && npm run lint          # 0 errores
+cd frontend && npm run lint          # 0 errores y 0 warnings
 ```
 
 La integración continua corre las tres verificaciones en cada push. El flujo completo se verificó contra el stack local: login, admisión, coordenadas manuales, pesaje, almacenaje, clasificación, tracking y novedad con evidencia.
@@ -101,7 +101,7 @@ La integración continua corre las tres verificaciones en cada push. El flujo co
 
 - **Módulos 2 y 3:** la integración real dependía de las cuentas AWS de otros equipos. En local, M1 publica sus eventos en LocalStack, pero nadie los consume ni responde, así que no se llegan a asignar rutas.
 - **Notificaciones:** los SMS están simulados (se escriben en el log) y el email requiere credenciales SMTP.
-- **Frontend:** algunas pantallas tienen datos de ejemplo y quedan tipos `any` sin precisar (aparecen como warnings de lint).
+- **Frontend:** la sede que muestra el encabezado ("Sede Central · ID 001") es fija: no se cambia según el usuario.
 
 ## Mi aporte
 
@@ -110,7 +110,7 @@ La integración continua corre las tres verificaciones en cada push. El flujo co
 - **Análisis y especificación:** redacción de los casos de uso UC-001 a UC-003 y del diagrama de casos de uso.
 - **Backend:** plan de ejecución e implementación del pesaje (UC-002), configuración de Testcontainers y Docker Compose, corrección de errores en la admisión y el pesaje, DTO de personas y adaptador SQS para clasificación.
 - **Frontend:** scaffolding inicial, alineación de la maqueta con las especificaciones, e integración con la API real de los flujos de admisión → pesaje, almacenaje → clasificación y discrepancias, además del flujo completo de novedades (UC-007).
-- **Después de la entrega:** consolidación en este monorepo, limpieza del historial (credenciales y artefactos), estabilización (tests en verde, tipado, bugs de integración), Docker Compose de un solo comando y CI.
+- **Después de la entrega:** consolidación en este monorepo, limpieza del historial (credenciales y artefactos), estabilización (tests en verde, tipado estricto sin `any`, bugs de integración), Docker Compose de un solo comando y CI.
 
 ## Equipo
 

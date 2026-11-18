@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   DiscrepancyApiService,
   UpdatePhysicalDataRequestDTO,
 } from "@/infrastructure/http/discrepancy-api.service";
 import { toast } from "sonner";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 export interface DiscrepancyFormData {
   pesoCorregido: number;
@@ -38,13 +39,14 @@ export function useDiscrepancy() {
     }));
   };
 
-  const calculateDifferences = (
-    pesoOriginal: number | undefined,
-    largoOriginal: number | undefined,
-    anchoOriginal: number | undefined,
-    altoOriginal: number | undefined,
-  ): DiscrepancyDifferences => {
-    return {
+  // Memoizada con formData: cambia solo cuando cambian los valores corregidos
+  const calculateDifferences = useCallback(
+    (
+      pesoOriginal: number | undefined,
+      largoOriginal: number | undefined,
+      anchoOriginal: number | undefined,
+      altoOriginal: number | undefined,
+    ): DiscrepancyDifferences => ({
       pesoDiff:
         pesoOriginal !== undefined && formData.pesoCorregido > 0
           ? formData.pesoCorregido - pesoOriginal
@@ -61,8 +63,9 @@ export function useDiscrepancy() {
         altoOriginal !== undefined && formData.altoCorregido > 0
           ? formData.altoCorregido - altoOriginal
           : null,
-    };
-  };
+    }),
+    [formData],
+  );
 
   const validateForm = (): boolean => {
     if (formData.pesoCorregido <= 0) {
@@ -99,7 +102,8 @@ export function useDiscrepancy() {
 
       toast.success(`✅ Datos físicos actualizados correctamente`);
       return true;
-    } catch (error: any) {
+    } catch (caught) {
+      const error = errorInfo(caught);
       const errorMsg = error.message || "Error desconocido al procesar discrepancia";
       toast.error(`❌ ${errorMsg}`);
       return false;

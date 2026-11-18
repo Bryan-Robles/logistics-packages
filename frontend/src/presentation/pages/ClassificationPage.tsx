@@ -19,19 +19,21 @@ import { toast } from "sonner";
 import {
   StorageApiService,
   ClassificationSuggestionDTO,
+  type DestinationZoneDTO,
 } from "@/infrastructure/http/storage-api.service";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 export function ClassificationPage() {
   const search = useSearch({ from: "/clasificacion" });
   // search ya está tipado por validateSearch de la ruta
-  const paqueteId = (search as Record<string, any>).paqueteId as string | undefined;
+  const paqueteId = search.paqueteId;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [suggestion, setSuggestion] = useState<ClassificationSuggestionDTO | null>(null);
-  const [availableZones, setAvailableZones] = useState<any[]>([]);
+  const [availableZones, setAvailableZones] = useState<DestinationZoneDTO[]>([]);
 
   useEffect(() => {
     // Cargar zonas disponibles
@@ -69,7 +71,8 @@ export function ClassificationPage() {
         setSuggestion(result);
         toast.dismiss();
         toast.success(`Zona sugerida: ${result.nombreZona}`);
-      } catch (err: any) {
+      } catch (caught) {
+        const err = errorInfo(caught);
         const errorMsg = err.message || "Error al cargar la sugerencia";
         setError(errorMsg);
         toast.dismiss();
@@ -105,7 +108,8 @@ export function ClassificationPage() {
       });
 
       setIsConfirmed(true);
-    } catch (err: any) {
+    } catch (caught) {
+      const err = errorInfo(caught);
       const errorMsg = err.message || "Error al confirmar clasificación";
       const errorCode = err.codigo || "";
       setError(errorMsg);

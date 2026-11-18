@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TrackingApiService, TrackingPaqueteDTO } from "@/infrastructure/http/tracking-api.service";
 import { toast } from "sonner";
+import { errorInfo } from "@/infrastructure/api/http-client";
 
 const estadoColores: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
   RECIBIDO_EN_SEDE: { bg: "bg-blue/10", text: "text-blue", icon: <Package className="h-5 w-5" /> },
@@ -82,8 +83,9 @@ export function TrackingPage() {
         setError(null);
         const data = await TrackingApiService.obtenerTracking(paqueteId);
         setTracking(data);
-      } catch (err: any) {
-        const mensaje = err.mensaje || err.message || "Error al cargar el tracking";
+      } catch (caught) {
+        const err = errorInfo(caught);
+        const mensaje = err.message || "Error al cargar el tracking";
         setError(mensaje);
         toast.error("Error", { description: mensaje });
       } finally {

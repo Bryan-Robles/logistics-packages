@@ -1,4 +1,4 @@
-import httpClient, { parseApiError } from "../api/http-client";
+import httpClient, { toApiError } from "../api/http-client";
 
 /**
  * DTO: Respuesta del endpoint GET /api/sedes
@@ -34,11 +34,7 @@ export class SedesApiService {
       const response = await httpClient.get<SedeDTO[]>(this.BASE_URL);
       return response.data || [];
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error al obtener sedes") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error al obtener sedes");
     }
   }
 }

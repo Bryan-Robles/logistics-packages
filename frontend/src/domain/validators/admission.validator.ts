@@ -82,12 +82,13 @@ export const admissionSchema = z.object({
     .min(1, "El valor declarado debe ser mayor a cero")
     .max(50000000, "El valor declarado no puede exceder $50.000.000"),
   metodoPago: z.nativeEnum(PaymentMethod),
-  tipoMercancia: z.unknown().optional(),
+  // Datos físicos opcionales en admisión: se capturan en el pesaje (UC-002)
+  tipoMercancia: z.string().optional(),
   indicadorFormaIrregular: z.boolean().optional(),
-  peso: z.unknown().optional(),
-  largo: z.unknown().optional(),
-  ancho: z.unknown().optional(),
-  alto: z.unknown().optional(),
+  peso: z.number().positive().optional(),
+  largo: z.number().positive().optional(),
+  ancho: z.number().positive().optional(),
+  alto: z.number().positive().optional(),
 });
 
 export type AdmissionFormData = z.infer<typeof admissionSchema>;

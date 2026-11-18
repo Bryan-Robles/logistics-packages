@@ -1,4 +1,4 @@
-import httpClient, { parseApiError } from "../api/http-client";
+import httpClient, { toApiError } from "../api/http-client";
 
 /**
  * DTO: Datos del paquete para discrepancia (estructura del backend - ConsultaPaqueteResponse)
@@ -56,11 +56,7 @@ export class DiscrepancyApiService {
       const response = await httpClient.get<PackageDetailsDTO>(`${this.BASE_URL}/${paqueteId}`);
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error al obtener detalles del paquete") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error al obtener detalles del paquete");
     }
   }
 
@@ -82,11 +78,7 @@ export class DiscrepancyApiService {
       );
       return response.data;
     } catch (error) {
-      const parsedError = parseApiError(error);
-      const err = new Error(parsedError.mensaje || "Error al actualizar datos físicos") as any;
-      err.codigo = parsedError.codigo;
-      err.mensaje = parsedError.mensaje;
-      throw err;
+      throw toApiError(error, "Error al actualizar datos físicos");
     }
   }
 }
