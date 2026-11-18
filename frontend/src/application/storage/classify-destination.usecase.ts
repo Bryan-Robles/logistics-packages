@@ -34,7 +34,7 @@ export class ClassifyDestinationUseCase {
       pkg.paymentMethod,
       pkg.weight,
       pkg.dimensions,
-      PackageStatus.CLASSIFIED,
+      PackageStatus.LISTO_PARA_DESPACHO, // backend: confirmar clasificación
       pkg.cargoCategory,
       pkg.routeId,
       pkg.statusHistory,

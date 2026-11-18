@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Control, UseFormSetValue, FieldErrors } from "react-hook-form";
+import type { AdmissionControl, AdmissionErrors, AdmissionSetValue } from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
@@ -29,9 +29,9 @@ const CIUDADES_COBERTURA = [
 ];
 
 interface RecipientFormProps {
-  control: Control<any>;
-  setValue: UseFormSetValue<any>;
-  errors?: FieldErrors<any>;
+  control: AdmissionControl;
+  setValue: AdmissionSetValue;
+  errors?: AdmissionErrors;
   touched?: any;
 }
 
@@ -43,7 +43,7 @@ function CiudadSelect({
 }: {
   value: string;
   onChange: (val: string) => void;
-  setValue: UseFormSetValue<any>;
+  setValue: AdmissionSetValue;
 }) {
   const handleCiudadChange = (ciudad: string) => {
     onChange(ciudad);

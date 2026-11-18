@@ -39,7 +39,7 @@ const emailSchema = z.string().min(1, "El correo es requerido").email("El correo
 
 // Schema del remitente
 const remitenteSchema = z.object({
-  tipoDocumento: z.enum(Object.values(DocumentType) as readonly [string, ...string[]]),
+  tipoDocumento: z.nativeEnum(DocumentType),
   numeroDocumento: numeroDocumentoSchema.refine(
     (val) => val.trim().length > 0,
     "El número de documento es requerido",
@@ -81,7 +81,7 @@ export const admissionSchema = z.object({
     .number()
     .min(1, "El valor declarado debe ser mayor a cero")
     .max(50000000, "El valor declarado no puede exceder $50.000.000"),
-  metodoPago: z.enum(Object.values(PaymentMethod) as readonly [string, ...string[]]),
+  metodoPago: z.nativeEnum(PaymentMethod),
   tipoMercancia: z.unknown().optional(),
   indicadorFormaIrregular: z.boolean().optional(),
   peso: z.unknown().optional(),
@@ -91,3 +91,5 @@ export const admissionSchema = z.object({
 });
 
 export type AdmissionFormData = z.infer<typeof admissionSchema>;
+// Form values before zod defaults/transforms are applied (what react-hook-form holds)
+export type AdmissionFormInput = z.input<typeof admissionSchema>;

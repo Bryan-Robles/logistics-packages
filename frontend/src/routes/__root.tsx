@@ -4,8 +4,10 @@ import {
   createRootRoute,
   HeadContent,
   Scripts,
-  useRouter,
+  useNavigate,
+  useRouterState,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../lib/auth-context";
 import { AdmissionProvider } from "../lib/admission-context";
 
@@ -15,12 +17,18 @@ const PUBLIC_PATHS = ["/login", "/register"];
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
+  // Reactive pathname: re-evaluates the guard on every client-side navigation
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const mustLogin = !isAuthenticated && !PUBLIC_PATHS.includes(pathname);
 
-  if (!isAuthenticated && !PUBLIC_PATHS.includes(router.state.location.pathname)) {
-    window.location.href = "/login";
-    return null;
-  }
+  useEffect(() => {
+    if (mustLogin) {
+      navigate({ to: "/login", replace: true });
+    }
+  }, [mustLogin, navigate]);
+
+  if (mustLogin) return null;
 
   return <>{children}</>;
 }

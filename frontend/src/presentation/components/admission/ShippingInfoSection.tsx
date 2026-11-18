@@ -7,15 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Control, FieldErrors } from "react-hook-form";
+import type { AdmissionControl, AdmissionErrors } from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
 import { PaymentMethod, PaymentMethodLabel } from "@/domain/enums/payment-method.enum";
 
 interface ShippingInfoSectionProps {
-  control: Control<any>;
-  errors?: FieldErrors<any>;
+  control: AdmissionControl;
+  errors?: AdmissionErrors;
   touched?: any;
 }
 

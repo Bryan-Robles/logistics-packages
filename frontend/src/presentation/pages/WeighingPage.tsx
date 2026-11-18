@@ -60,29 +60,6 @@ export function WeighingPage() {
   const [backendAlerts, setBackendAlerts] = useState<string[]>([]);
   const [showAtypicalDensityAlert, setShowAtypicalDensityAlert] = useState(false);
 
-  // Validar que paqueteId exista (viene de AdmissionPage)
-  if (!paqueteId) {
-    return (
-      <AppLayout
-        icon={<Package className="h-5 w-5 text-primary-foreground" />}
-        title="HERMES EXPRESS"
-      >
-        <main className="mx-auto max-w-7xl px-6 py-8">
-          <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Error: Paquete no encontrado</AlertTitle>
-            <AlertDescription>
-              Por favor regrese a la pantalla de admisión para completar el flujo.
-            </AlertDescription>
-          </Alert>
-          <Button onClick={() => navigate({ to: "/admision" })} className="mt-4">
-            Volver a Admisión
-          </Button>
-        </main>
-      </AppLayout>
-    );
-  }
-
   const pesoVolumetrico = volumen * DENSITY_FACTOR;
   const pesoFacturable = Math.max(pesoReal, pesoVolumetrico);
 
@@ -107,6 +84,30 @@ export function WeighingPage() {
   const handleValidityChange = useCallback((valid: boolean) => {
     setIsValidTechnicalSpecs(valid);
   }, []);
+
+  // Validar que paqueteId exista (viene de AdmissionPage).
+  // Va después de todos los hooks: un return temprano antes de ellos rompe el orden de hooks.
+  if (!paqueteId) {
+    return (
+      <AppLayout
+        icon={<Package className="h-5 w-5 text-primary-foreground" />}
+        title="HERMES EXPRESS"
+      >
+        <main className="mx-auto max-w-7xl px-6 py-8">
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Error: Paquete no encontrado</AlertTitle>
+            <AlertDescription>
+              Por favor regrese a la pantalla de admisión para completar el flujo.
+            </AlertDescription>
+          </Alert>
+          <Button onClick={() => navigate({ to: "/admision" })} className="mt-4">
+            Volver a Admisión
+          </Button>
+        </main>
+      </AppLayout>
+    );
+  }
 
   // FE-3: Implementar llamada real al backend
   const handleConfirm = async () => {

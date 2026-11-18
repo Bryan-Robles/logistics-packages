@@ -44,7 +44,7 @@ export class PrepareStorageUseCase {
       pkg.paymentMethod,
       pkg.weight,
       pkg.dimensions,
-      PackageStatus.IN_STORAGE,
+      PackageStatus.EN_CLASIFICACION, // backend: asignar zona de almacenaje
       pkg.cargoCategory,
       pkg.routeId,
       pkg.statusHistory,

@@ -10,7 +10,8 @@ import { Recipient } from "./recipient.entity";
 import { StatusHistoryEntry } from "./status-history.entity";
 
 export class Package {
-  private constructor(
+  // Public so infrastructure mappers can rebuild a Package from API data.
+  constructor(
     readonly id: string,
     readonly sender: Sender,
     readonly recipient: Recipient,
@@ -43,10 +44,10 @@ export class Package {
       params.paymentMethod,
       undefined,
       undefined,
-      PackageStatus.REGISTERED,
+      PackageStatus.RECIBIDO_EN_SEDE,
       undefined,
       undefined,
-      [new StatusHistoryEntry(PackageStatus.REGISTERED, new Date(), "OPERATOR")],
+      [new StatusHistoryEntry(PackageStatus.RECIBIDO_EN_SEDE, new Date(), "OPERATOR")],
       new Date(),
     );
   }
@@ -65,13 +66,11 @@ export class Package {
       this.paymentMethod,
       weight,
       dimensions,
-      PackageStatus.WEIGHED,
+      // Weighing does not change the package state in the backend
+      this.status,
       category,
       this.routeId,
-      [
-        ...this.statusHistory,
-        new StatusHistoryEntry(PackageStatus.WEIGHED, new Date(), "OPERATOR"),
-      ],
+      this.statusHistory,
       this.createdAt,
     );
   }
@@ -86,13 +85,11 @@ export class Package {
       this.paymentMethod,
       this.weight,
       this.dimensions,
-      PackageStatus.ROUTE_ASSIGNED,
+      // Route assignment does not change the package state in the backend
+      this.status,
       this.cargoCategory,
       routeId,
-      [
-        ...this.statusHistory,
-        new StatusHistoryEntry(PackageStatus.ROUTE_ASSIGNED, new Date(), "SYSTEM"),
-      ],
+      this.statusHistory,
       this.createdAt,
     );
   }

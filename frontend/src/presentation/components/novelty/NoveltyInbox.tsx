@@ -5,7 +5,7 @@ interface NoveltyInboxProps {
   novelties: Novelty[];
   selectedId: string;
   onSelect: (novelty: Novelty) => void;
-  onResetClosed: () => void;
+  onResetClosed?: () => void;
 }
 
 export function NoveltyInbox({
@@ -27,7 +27,7 @@ export function NoveltyInbox({
             key={n.id}
             onClick={() => {
               onSelect(n);
-              onResetClosed();
+              onResetClosed?.();
             }}
             className={`w-full rounded-lg border-l-4 p-3 text-left transition-colors ${
               selectedId === n.id
