@@ -281,7 +281,7 @@ export function AdmissionPage() {
           <AlertTitle>Recordatorio para el Operador</AlertTitle>
           <AlertDescription>
             Al confirmar el registro y asignarse la ruta, informe al cliente que la fecha estimada
-            máxima de entrega es de **7 días hábiles**.
+            máxima de entrega es de <strong>7 días hábiles</strong>.
           </AlertDescription>
         </Alert>
       </main>
