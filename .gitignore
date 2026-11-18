@@ -28,3 +28,6 @@ frontend/.tanstack/
 # ── Local tooling ──
 .opencode/
 backend/Externo/Agent/.sync-status.json
+
+# ── Local agent tooling ──
+.claude/

@@ -34,4 +34,7 @@ public class PesajeCommand {
 
     // Evidencia fotográfica opcional (MOD1-UC-002 FR-004)
     private final MultipartFile evidencia;
+
+    // Usuario autenticado que registra el pesaje (historial_estados.usuario_id es NOT NULL)
+    private final UUID usuarioId;
 }

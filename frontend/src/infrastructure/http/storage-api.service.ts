@@ -1,4 +1,5 @@
 import httpClient, { parseApiError } from "../api/http-client";
+import { toFormData, MULTIPART_HEADERS } from "../api/form-data";
 
 /**
  * DTO: Respuesta de zona de almacenaje sugerida
@@ -231,7 +232,9 @@ export class StorageApiService {
 
       const response = await httpClient.post<ConfirmacionClasificacionDTO>(
         `${this.BASE_URL}/clasificacion/confirmar`,
-        requestData,
+        // Backend endpoint is multipart/form-data (@RequestParam + optional evidence file)
+        toFormData(requestData),
+        { headers: MULTIPART_HEADERS },
       );
       return response.data;
     } catch (error) {

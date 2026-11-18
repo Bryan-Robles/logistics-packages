@@ -1,4 +1,5 @@
 import api, { parseApiError } from "../api/http-client";
+import { toFormData, MULTIPART_HEADERS } from "../api/form-data";
 
 /**
  * DTO de respuesta del endpoint de admisión (enriquecido por BE-4)
@@ -72,7 +73,12 @@ export class AdmisionApiService {
    */
   static async registerAdmision(data: AdmisionRequestDto): Promise<AdmisionResponseDto> {
     try {
-      const response = await api.post<AdmisionResponseDto>(`${this.BASE_URL}/admision`, data);
+      // Backend endpoint is multipart/form-data (@ModelAttribute + optional evidence file)
+      const response = await api.post<AdmisionResponseDto>(
+        `${this.BASE_URL}/admision`,
+        toFormData(data),
+        { headers: MULTIPART_HEADERS },
+      );
 
       return response.data;
     } catch (error) {

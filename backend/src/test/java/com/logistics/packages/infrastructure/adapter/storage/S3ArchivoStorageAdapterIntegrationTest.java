@@ -1,5 +1,6 @@
 package com.logistics.packages.infrastructure.adapter.storage;
 
+import com.logistics.packages.TestcontainersConfiguration;
 import com.logistics.packages.application.repository.ArchivoStoragePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Import(TestcontainersConfigurationForS3IT.class)
+@Import(TestcontainersConfiguration.class)
 @Tag("integration")
 @DisplayName("S3ArchivoStorageAdapter Integration Test")
 class S3ArchivoStorageAdapterIntegrationTest {

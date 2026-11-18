@@ -1,5 +1,6 @@
 package com.logistics.packages.infrastructure.adapter.messaging;
 
+import com.logistics.packages.TestcontainersConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.logistics.packages.domain.model.Paquete;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-@Import(TestcontainersConfigurationForIT.class)
+@Import(TestcontainersConfiguration.class)
 @Tag("integration")
 @DisplayName("RutaSqsAdapter Integration Test (T308)")
 class RutaSqsAdapterIntegrationTest {

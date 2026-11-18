@@ -81,7 +81,7 @@ public class ProcesarPesajeUseCase {
                 null,
                 paquete.getEstado(),
                 "Pesaje procesado",
-                null,
+                command.getUsuarioId(),
                 urlEvidencia
         );
         historialEstadoRepository.guardar(historialPesaje);
