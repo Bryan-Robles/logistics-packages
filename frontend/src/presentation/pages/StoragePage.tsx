@@ -36,22 +36,18 @@ export function StoragePage() {
   const [isConfirming, setIsConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Auto-buscar si viene paqueteId en search params
+  // Auto-buscar solo cuando el paqueteId llega por la URL (?paqueteId=...).
+  // Antes la búsqueda se disparaba en cada tecla del input.
   useEffect(() => {
-    if (searchParams.paqueteId && !packageId) {
+    if (searchParams.paqueteId) {
       setPackageId(searchParams.paqueteId);
+      handleSearch(searchParams.paqueteId);
     }
-  }, [searchParams.paqueteId, packageId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run only when the URL param changes
+  }, [searchParams.paqueteId]);
 
-  // Auto-disparar búsqueda cuando se completa el packageId desde URL
-  useEffect(() => {
-    if (packageId && !suggestion) {
-      handleSearch();
-    }
-  }, [packageId, suggestion]);
-
-  const handleSearch = async () => {
-    if (!packageId.trim()) {
+  const handleSearch = async (id: string = packageId) => {
+    if (!id.trim()) {
       toast.error("Por favor ingresa un UUID de paquete");
       return;
     }
@@ -61,7 +57,7 @@ export function StoragePage() {
     toast.loading("Buscando paquete...");
 
     try {
-      const result = await StorageApiService.getStorageZoneSuggestion(packageId);
+      const result = await StorageApiService.getStorageZoneSuggestion(id.trim());
       setSuggestion(result);
       toast.dismiss();
       toast.success(`Zona sugerida: ${result.nombreZona}`);
@@ -168,7 +164,7 @@ export function StoragePage() {
           </div>
           <div className="mt-4 flex gap-2">
             <Button
-              onClick={handleSearch}
+              onClick={() => handleSearch()}
               disabled={loadingSearch || !packageId.trim()}
               className="flex-1"
             >

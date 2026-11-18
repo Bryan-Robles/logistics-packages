@@ -246,7 +246,9 @@ export function TrackingPage() {
                     <p className="text-sm font-semibold text-muted-foreground">
                       Distancia Estimada
                     </p>
-                    <p className="mt-1 text-foreground">{tracking.distanciaEstimadaKm} km</p>
+                    <p className="mt-1 text-foreground">
+                      {tracking.distanciaEstimadaKm.toFixed(1)} km
+                    </p>
                   </div>
                 )}
                 {tracking.rutaId && (
