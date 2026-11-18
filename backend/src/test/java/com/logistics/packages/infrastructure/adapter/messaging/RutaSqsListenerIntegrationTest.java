@@ -78,6 +78,8 @@ class RutaSqsListenerIntegrationTest {
                 .estado(EstadoPaquete.RECIBIDO_EN_SEDE)
                 .build();
         paquete.prePersist();
+        // prePersist() asigna un id nuevo: usar ese id en los mensajes
+        paqueteId = paquete.getId();
         paqueteRepository.save(paquete);
     }
 
