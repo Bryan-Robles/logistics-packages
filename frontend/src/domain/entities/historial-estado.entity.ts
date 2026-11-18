@@ -1,7 +1,7 @@
 /**
  * Entidad que representa un registro del historial inmutable de transiciones de estado de un paquete.
  * MOD1-UC-007: SC-001 - Historial inmutable vinculado al UUID del paquete.
- * 
+ *
  * Esta entidad mapea la respuesta del backend GET /api/paquetes/{id}/historial
  */
 export interface HistorialEstadoDto {

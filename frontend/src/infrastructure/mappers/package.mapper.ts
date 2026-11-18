@@ -101,10 +101,11 @@ export interface AdmissionRequestDTO {
     departamento: string;
     pais: string;
   };
-  peso: number;
-  largo: number;
-  ancho: number;
-  alto: number;
+  // Optional: admission can be registered before weighing (UC-002)
+  peso?: number;
+  largo?: number;
+  ancho?: number;
+  alto?: number;
   tipoMercancia: string;
   valorDeclarado: number;
   metodoPago: string;
@@ -198,31 +199,10 @@ export interface PaginatedResponseDTO<T> {
   first: boolean;
 }
 
-const BACKEND_TO_DOMAIN_STATUS: Record<string, PackageStatus> = {
-  RECIBIDO_EN_SEDE: PackageStatus.REGISTERED,
-  EN_CLASIFICACION: PackageStatus.IN_STORAGE,
-  LISTO_PARA_DESPACHO: PackageStatus.READY_FOR_DISPATCH,
-  EN_TRANSITO: PackageStatus.IN_TRANSIT,
-  ENTREGADO: PackageStatus.DELIVERED,
-  NOVEDAD_EN_BODEGA: PackageStatus.NOVELTY,
-  EN_PARADA_DE_ENTREGA: PackageStatus.IN_TRANSIT,
-  DEVOLUCION_EN_RUTA: PackageStatus.RETURNED,
-  EXTRAVIADO_EN_RUTA: PackageStatus.NOVELTY,
-  DAÑADO_EN_RUTA: PackageStatus.NOVELTY,
-};
-
-const DOMAIN_TO_BACKEND_STATUS: Record<PackageStatus, string> = {
-  [PackageStatus.REGISTERED]: "RECIBIDO_EN_SEDE",
-  [PackageStatus.WEIGHED]: "EN_CLASIFICACION",
-  [PackageStatus.ROUTE_ASSIGNED]: "LISTO_PARA_DESPACHO",
-  [PackageStatus.IN_STORAGE]: "EN_CLASIFICACION",
-  [PackageStatus.CLASSIFIED]: "LISTO_PARA_DESPACHO",
-  [PackageStatus.READY_FOR_DISPATCH]: "LISTO_PARA_DESPACHO",
-  [PackageStatus.IN_TRANSIT]: "EN_TRANSITO",
-  [PackageStatus.DELIVERED]: "ENTREGADO",
-  [PackageStatus.NOVELTY]: "NOVEDAD_EN_BODEGA",
-  [PackageStatus.RETURNED]: "DEVOLUCION_EN_RUTA",
-};
+// PackageStatus values are the backend state names, so the mapping is the identity.
+const KNOWN_STATUSES = new Set<string>(Object.values(PackageStatus));
+const toDomainStatus = (estado: string): PackageStatus =>
+  KNOWN_STATUSES.has(estado) ? (estado as PackageStatus) : PackageStatus.RECIBIDO_EN_SEDE;
 
 const DOMAIN_TO_BACKEND_MERCHANDISE: Record<string, string> = {
   estandar: "ESTANDAR",
@@ -296,11 +276,15 @@ export class PackageMapper {
       dto.status as PackageStatus,
       dto.cargoCategory as CargoCategory | undefined,
       dto.routeId,
-       dto.statusHistory.map(
-         (h) =>
-           new StatusHistoryEntry(h.status as PackageStatus, new Date(h.timestamp + 'Z'), h.updatedBy),
-       ),
-       new Date(dto.createdAt + 'Z'),
+      dto.statusHistory.map(
+        (h) =>
+          new StatusHistoryEntry(
+            h.status as PackageStatus,
+            new Date(h.timestamp + "Z"),
+            h.updatedBy,
+          ),
+      ),
+      new Date(dto.createdAt + "Z"),
     );
   }
 
@@ -369,25 +353,25 @@ export class PackageMapper {
       ? Dimensions.create(raw.dimensiones.largoCm, raw.dimensiones.anchoCm, raw.dimensiones.altoCm)
       : undefined;
 
-    const domainStatus = BACKEND_TO_DOMAIN_STATUS[raw.estado] || PackageStatus.REGISTERED;
+    const domainStatus = toDomainStatus(raw.estado);
     const domainMerch = BACKEND_TO_DOMAIN_MERCHANDISE[raw.tipoMercancia] || raw.tipoMercancia;
     const domainPay = BACKEND_TO_DOMAIN_PAYMENT[raw.metodoPago] || raw.metodoPago;
 
-     return new Package(
-       raw.id,
-       sender,
-       recipient,
-       domainMerch as MerchandiseType,
-       raw.valorDeclarado ? DeclaredValue.create(raw.valorDeclarado) : undefined,
-       domainPay as PaymentMethod,
-       weight,
-       dimensions,
-       domainStatus,
-       undefined,
-       undefined,
-       [],
-       new Date(raw.fechaIngresoUtc + 'Z'),
-     );
+    return new Package(
+      raw.id,
+      sender,
+      recipient,
+      domainMerch as MerchandiseType,
+      raw.valorDeclarado ? DeclaredValue.create(raw.valorDeclarado) : undefined,
+      domainPay as PaymentMethod,
+      weight,
+      dimensions,
+      domainStatus,
+      undefined,
+      undefined,
+      [],
+      new Date(raw.fechaIngresoUtc + "Z"),
+    );
   }
 
   static domainToAdmissionRequest(domain: Package, sedeId: string): AdmissionRequestDTO {
@@ -421,12 +405,12 @@ export class PackageMapper {
         correoElectronico: domain.recipient.email,
         direccion: dirDestino,
       },
-       direccionDestino: dirDestino,
-       peso: domain.weight?.value,
-       largo: domain.dimensions?.lengthCm,
-       ancho: domain.dimensions?.widthCm,
-       alto: domain.dimensions?.heightCm,
-       tipoMercancia: mapMerch(domain.merchandiseType),
+      direccionDestino: dirDestino,
+      peso: domain.weight?.value,
+      largo: domain.dimensions?.lengthCm,
+      ancho: domain.dimensions?.widthCm,
+      alto: domain.dimensions?.heightCm,
+      tipoMercancia: mapMerch(domain.merchandiseType),
       valorDeclarado: domain.declaredValue?.amount ?? 0,
       metodoPago: mapPay(domain.paymentMethod),
       sedeId,
@@ -434,10 +418,10 @@ export class PackageMapper {
   }
 
   static backendStatusToDomain(backendStatus: string): PackageStatus {
-    return BACKEND_TO_DOMAIN_STATUS[backendStatus] || PackageStatus.REGISTERED;
+    return toDomainStatus(backendStatus);
   }
 
   static domainStatusToBackend(status: PackageStatus): string {
-    return DOMAIN_TO_BACKEND_STATUS[status] || status;
+    return status;
   }
 }

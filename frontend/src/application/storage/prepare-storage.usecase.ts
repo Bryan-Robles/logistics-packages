@@ -44,7 +44,7 @@ export class PrepareStorageUseCase {
       pkg.paymentMethod,
       pkg.weight,
       pkg.dimensions,
-      PackageStatus.IN_STORAGE,
+      PackageStatus.EN_CLASIFICACION, // backend: asignar zona de almacenaje
       pkg.cargoCategory,
       pkg.routeId,
       pkg.statusHistory,
@@ -63,13 +63,13 @@ export class PrepareStorageUseCase {
     ];
   }
 
-   private suggestZone(pkg: Package, zones: StorageZone[]): StorageZone {
-     if (pkg.merchandiseType === "FRAGIL" || pkg.merchandiseType === "PELIGROSO") {
-       const delicate = zones.find((z) => z.category === ZoneCategory.DELICATE);
-       if (delicate && !delicate.isSaturated) return delicate;
-       const contingency = zones.find((z) => z.category === ZoneCategory.RETENCION);
-       if (contingency) return contingency;
-     }
-     return zones[1];
-   }
+  private suggestZone(pkg: Package, zones: StorageZone[]): StorageZone {
+    if (pkg.merchandiseType === "FRAGIL" || pkg.merchandiseType === "PELIGROSO") {
+      const delicate = zones.find((z) => z.category === ZoneCategory.DELICATE);
+      if (delicate && !delicate.isSaturated) return delicate;
+      const contingency = zones.find((z) => z.category === ZoneCategory.RETENCION);
+      if (contingency) return contingency;
+    }
+    return zones[1];
+  }
 }

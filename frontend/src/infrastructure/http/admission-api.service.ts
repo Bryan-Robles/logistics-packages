@@ -57,7 +57,7 @@ export interface CoordenadasUpdateResponseDto {
 /**
  * Servicio HTTP para operaciones de admisión de paquetes.
  * Maneja la comunicación con POST /api/paquetes/admision y PATCH /api/paquetes/{id}/coordenadas
- * 
+ *
  * FE-2: Conecta AdmissionPage al backend
  * FE-5: Contingencia GPS - Actualizar coordenadas manualmente
  */
@@ -70,34 +70,27 @@ export class AdmisionApiService {
    * @returns Respuesta con paqueteId, etiquetaDigital, estadoGps, estado
    * @throws Error si la petición falla
    */
-  static async registerAdmision(
-    data: AdmisionRequestDto
-  ): Promise<AdmisionResponseDto> {
+  static async registerAdmision(data: AdmisionRequestDto): Promise<AdmisionResponseDto> {
     try {
-      const response = await api.post<AdmisionResponseDto>(
-        `${this.BASE_URL}/admision`,
-        data
-      );
+      const response = await api.post<AdmisionResponseDto>(`${this.BASE_URL}/admision`, data);
 
       return response.data;
     } catch (error) {
       const parsedError = parseApiError(error);
-      
+
       // Si es error de cobertura (400 COBERTURA_INVALIDA), lanzar con tipo específico
       if (parsedError.status === 400 && parsedError.mensaje?.includes("COBERTURA")) {
         throw new Error(`COBERTURA_INVALIDA: ${parsedError.mensaje}`);
       }
-      
-      throw new Error(
-        `Error al registrar admisión: ${parsedError.mensaje || "Error desconocido"}`
-      );
+
+      throw new Error(`Error al registrar admisión: ${parsedError.mensaje || "Error desconocido"}`);
     }
   }
 
   /**
    * FE-5: Actualiza las coordenadas de un paquete (contingencia GPS).
    * Este método permite ingresar manualmente las coordenadas cuando el GPS está en estado PENDIENTE.
-   * 
+   *
    * @param paqueteId ID del paquete a actualizar
    * @param latitud Latitud (-90 a 90)
    * @param longitud Longitud (-180 a 180)
@@ -107,12 +100,12 @@ export class AdmisionApiService {
   static async updateCoordenadas(
     paqueteId: string,
     latitud: number,
-    longitud: number
+    longitud: number,
   ): Promise<CoordenadasUpdateResponseDto> {
     try {
       const response = await api.patch<CoordenadasUpdateResponseDto>(
         `${this.BASE_URL}/${paqueteId}/coordenadas`,
-        { latitud, longitud }
+        { latitud, longitud },
       );
 
       return response.data;
@@ -128,7 +121,7 @@ export class AdmisionApiService {
       }
 
       throw new Error(
-        `Error al actualizar coordenadas: ${parsedError.mensaje || "Error desconocido"}`
+        `Error al actualizar coordenadas: ${parsedError.mensaje || "Error desconocido"}`,
       );
     }
   }

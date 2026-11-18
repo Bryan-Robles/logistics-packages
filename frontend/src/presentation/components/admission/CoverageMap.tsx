@@ -16,10 +16,10 @@ export interface CoverageMapProps {
   onCoordinatesUpdate?: (latitud: number, longitud: number) => void;
 }
 
-export function CoverageMap({ 
-  estadoGps = null, 
-  paqueteId, 
-  onCoordinatesUpdate 
+export function CoverageMap({
+  estadoGps = null,
+  paqueteId,
+  onCoordinatesUpdate,
 }: CoverageMapProps) {
   const [manualLat, setManualLat] = useState<string>("");
   const [manualLon, setManualLon] = useState<string>("");
@@ -62,12 +62,12 @@ export function CoverageMap({
     try {
       // Llamar al endpoint PATCH de coordenadas
       await AdmisionApiService.updateCoordenadas(paqueteId, lat, lon);
-      
+
       toast.success("✅ Coordenadas guardadas. GPS resuelto.");
-      
+
       // Invocar callback si está disponible
       onCoordinatesUpdate?.(lat, lon);
-      
+
       // Limpiar inputs
       setManualLat("");
       setManualLon("");
@@ -141,12 +141,13 @@ export function CoverageMap({
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Geolocalización Pendiente</AlertTitle>
             <AlertDescription>
-              El servicio de localización no pudo validar la dirección. Por favor ingrese las coordenadas manualmente.
+              El servicio de localización no pudo validar la dirección. Por favor ingrese las
+              coordenadas manualmente.
             </AlertDescription>
           </Alert>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <Field label="Latitud (-90 a 90)">
-              <Input 
+              <Input
                 placeholder="Ej: -12.046374"
                 type="number"
                 step="0.000001"
@@ -158,7 +159,7 @@ export function CoverageMap({
               />
             </Field>
             <Field label="Longitud (-180 a 180)">
-              <Input 
+              <Input
                 placeholder="Ej: -77.042793"
                 type="number"
                 step="0.000001"

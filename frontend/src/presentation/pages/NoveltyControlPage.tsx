@@ -37,20 +37,19 @@ export function NoveltyControlPage() {
     if (!selectedNovedad) return;
     setIsNotifying(true);
     toast.loading("Enviando notificaciones a cliente y remitente...");
-    
+
     try {
       // Llamar al endpoint real del backend
       await api.patch(
         `/api/paquetes/${selectedNovedad.packageId}/novedades/${selectedNovedad.id}/estado`,
         {},
-        { params: { action: "notify" } }
+        { params: { action: "notify" } },
       );
-      
+
       setIsNotifying(false);
       toast.dismiss();
       toast.success("✅ Notificaciones enviadas correctamente al cliente y remitente.");
       console.log("Notificaciones enviadas exitosamente para novedad:", selectedNovedad.id);
-      
     } catch (error) {
       setIsNotifying(false);
       toast.dismiss();
@@ -66,29 +65,28 @@ export function NoveltyControlPage() {
     if (!selectedNovedad) return;
     setIsClosing(true);
     toast.loading("Cerrando novedad y exponiendo datos para Finanzas...");
-    
+
     try {
       // Llamar al endpoint real del backend
       await api.patch(
         `/api/paquetes/${selectedNovedad.packageId}/novedades/${selectedNovedad.id}/estado`,
         {},
-        { params: { action: "close" } }
+        { params: { action: "close" } },
       );
-      
-       setIsClosing(false);
-       toast.dismiss();
-       toast.success("✅ Novedad cerrada y lista para consulta financiera.");
-       console.log("Novedad cerrada exitosamente:", selectedNovedad.id);
-       
-       // Recargar la lista de novedades para reflejar el estado actualizado
-       findAll().then((list) => {
-         setNovelties(list);
-         if (selectedNovedad) {
-           const updated = list.find(n => n.id === selectedNovedad.id);
-           setSelectedNovedad(updated || null);
-         }
-       });
-      
+
+      setIsClosing(false);
+      toast.dismiss();
+      toast.success("✅ Novedad cerrada y lista para consulta financiera.");
+      console.log("Novedad cerrada exitosamente:", selectedNovedad.id);
+
+      // Recargar la lista de novedades para reflejar el estado actualizado
+      findAll().then((list) => {
+        setNovelties(list);
+        if (selectedNovedad) {
+          const updated = list.find((n) => n.id === selectedNovedad.id);
+          setSelectedNovedad(updated || null);
+        }
+      });
     } catch (error) {
       setIsClosing(false);
       toast.dismiss();
@@ -164,29 +162,29 @@ export function NoveltyControlPage() {
         </h1>
 
         <div className="grid gap-6 lg:grid-cols-12">
-           <aside className="lg:col-span-3">
-             <NoveltyInbox
-               novelties={novelties}
-               selectedId={activeNovedad.id}
-               onSelect={setSelectedNovedad}
-             />
-           </aside>
+          <aside className="lg:col-span-3">
+            <NoveltyInbox
+              novelties={novelties}
+              selectedId={activeNovedad.id}
+              onSelect={setSelectedNovedad}
+            />
+          </aside>
 
           <section className="lg:col-span-5">
             <NoveltyDetail novelty={activeNovedad} />
           </section>
 
-           <aside className="space-y-4 lg:col-span-4">
-             <ActionPanel
-               novelty={activeNovedad}
-               isClosed={activeNovedad.status === "CLOSED"}
-               isNotifying={isNotifying}
-               isClosing={isClosing}
-               onNotify={handleNotify}
-               onClose={handleClose}
-               onReclassify={handleReclassify}
-             />
-           </aside>
+          <aside className="space-y-4 lg:col-span-4">
+            <ActionPanel
+              novelty={activeNovedad}
+              isClosed={activeNovedad.status === "CLOSED"}
+              isNotifying={isNotifying}
+              isClosing={isClosing}
+              onNotify={handleNotify}
+              onClose={handleClose}
+              onReclassify={handleReclassify}
+            />
+          </aside>
         </div>
       </main>
     </AppLayout>

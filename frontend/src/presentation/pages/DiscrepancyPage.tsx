@@ -35,13 +35,8 @@ export function DiscrepancyPage() {
     zonaId,
     remitenteNombre: contextRemitenteNombre,
   } = useAdmission();
-  const {
-    formData,
-    isSubmitting,
-    updateField,
-    calculateDifferences,
-    submitDiscrepancy,
-  } = useDiscrepancy();
+  const { formData, isSubmitting, updateField, calculateDifferences, submitDiscrepancy } =
+    useDiscrepancy();
 
   // Estado local para los datos del paquete
   const [isLoadingData, setIsLoadingData] = useState(false);
@@ -59,7 +54,7 @@ export function DiscrepancyPage() {
       setIsLoadingData(true);
       try {
         const packageData = await DiscrepancyApiService.getPackageDetails(paqueteId);
-        
+
         if (packageData) {
           if (packageData.pesoKg) {
             setPesoOriginal(packageData.pesoKg);
@@ -87,7 +82,7 @@ export function DiscrepancyPage() {
         pesoOriginal ?? undefined,
         largoOriginal ?? undefined,
         anchoOriginal ?? undefined,
-        altoOriginal ?? undefined
+        altoOriginal ?? undefined,
       ),
     [
       formData.pesoCorregido,
@@ -99,16 +94,13 @@ export function DiscrepancyPage() {
       anchoOriginal,
       altoOriginal,
       calculateDifferences,
-    ]
+    ],
   );
 
   // Determinar qué cambió para mostrar en el Resumen
   const cambiosDetectados = useMemo(() => {
     const cambios: string[] = [];
-    if (
-      formData.pesoCorregido > 0 &&
-      formData.pesoCorregido !== pesoOriginal
-    ) {
+    if (formData.pesoCorregido > 0 && formData.pesoCorregido !== pesoOriginal) {
       cambios.push(`Actualizar el peso (${pesoOriginal} kg → ${formData.pesoCorregido} kg)`);
     }
     if (
@@ -118,7 +110,7 @@ export function DiscrepancyPage() {
         formData.altoCorregido !== altoOriginal)
     ) {
       cambios.push(
-        `Actualizar dimensiones (${largoOriginal}×${anchoOriginal}×${altoOriginal} cm → ${formData.largoCorregido}×${formData.anchoCorregido}×${formData.altoCorregido} cm)`
+        `Actualizar dimensiones (${largoOriginal}×${anchoOriginal}×${altoOriginal} cm → ${formData.largoCorregido}×${formData.anchoCorregido}×${formData.altoCorregido} cm)`,
       );
     }
     if (cambios.length > 0) {
@@ -206,15 +198,11 @@ export function DiscrepancyPage() {
                   <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
                     <Box className="h-4 w-4" />
                   </span>
-                  <h2 className="text-sm font-bold text-foreground">
-                    Datos del Paquete
-                  </h2>
+                  <h2 className="text-sm font-bold text-foreground">Datos del Paquete</h2>
                 </div>
                 <div className="grid gap-5 sm:grid-cols-3">
                   <Field label="UUID">
-                    <p className="font-mono text-sm font-semibold text-foreground">
-                      {paqueteId}
-                    </p>
+                    <p className="font-mono text-sm font-semibold text-foreground">{paqueteId}</p>
                   </Field>
                   <Field label="Status">
                     <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
@@ -232,9 +220,7 @@ export function DiscrepancyPage() {
               {/* Comparación Original vs Corregido */}
               <div className="grid gap-6 md:grid-cols-2">
                 <section className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-                  <h3 className="mb-4 text-base font-bold text-foreground">
-                    Original (Sistema)
-                  </h3>
+                  <h3 className="mb-4 text-base font-bold text-foreground">Original (Sistema)</h3>
                   <div className="space-y-4">
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -242,9 +228,7 @@ export function DiscrepancyPage() {
                       </p>
                       <p className="mt-1 text-2xl font-bold tracking-tight text-foreground">
                         {pesoOriginal !== null ? pesoOriginal : "N/A"}
-                        <span className="ml-1 text-sm font-medium text-muted-foreground">
-                          kg
-                        </span>
+                        <span className="ml-1 text-sm font-medium text-muted-foreground">kg</span>
                       </p>
                     </div>
                     <div>
@@ -255,9 +239,7 @@ export function DiscrepancyPage() {
                         {largoOriginal !== null && anchoOriginal !== null && altoOriginal !== null
                           ? `${largoOriginal} × ${anchoOriginal} × ${altoOriginal}`
                           : "N/A"}
-                        <span className="ml-1 text-sm font-medium text-muted-foreground">
-                          cm
-                        </span>
+                        <span className="ml-1 text-sm font-medium text-muted-foreground">cm</span>
                       </p>
                       <p className="text-[11px] italic text-muted-foreground">
                         Largo × Ancho × Alto
@@ -290,8 +272,7 @@ export function DiscrepancyPage() {
                       {differences.pesoDiff !== null && (
                         <span className="mt-2 inline-flex items-center gap-1 rounded-md bg-warning/30 px-2 py-1 text-[11px] font-bold text-primary-foreground">
                           <AlertTriangle className="h-3 w-3" />
-                          Diferencia:{" "}
-                          {differences.pesoDiff > 0 ? "+" : ""}
+                          Diferencia: {differences.pesoDiff > 0 ? "+" : ""}
                           {differences.pesoDiff.toFixed(1)} kg
                         </span>
                       )}
@@ -334,8 +315,7 @@ export function DiscrepancyPage() {
                         differences.altoDiff !== null && (
                           <span className="mt-2 inline-flex items-center gap-1 rounded-md bg-warning/30 px-2 py-1 text-[11px] font-bold text-primary-foreground">
                             <AlertTriangle className="h-3 w-3" />
-                            Diferencia:{" "}
-                            {differences.largoDiff > 0 ? "+" : ""}
+                            Diferencia: {differences.largoDiff > 0 ? "+" : ""}
                             {differences.largoDiff.toFixed(0)} ×{" "}
                             {differences.anchoDiff > 0 ? "+" : ""}
                             {differences.anchoDiff.toFixed(0)} ×{" "}
@@ -347,15 +327,12 @@ export function DiscrepancyPage() {
                   </div>
                 </section>
               </div>
-
             </div>
 
             {/* Panel Lateral: Resumen */}
             <div className="space-y-6">
               <section className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-                <h3 className="mb-4 text-base font-bold text-foreground">
-                  Resumen
-                </h3>
+                <h3 className="mb-4 text-base font-bold text-foreground">Resumen</h3>
                 {cambiosDetectados.length > 0 ? (
                   <ul className="space-y-3 text-sm">
                     {cambiosDetectados.map((cambio, idx) => (
@@ -399,9 +376,7 @@ export function DiscrepancyPage() {
               <div className="flex gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
                 <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
                 <div>
-                  <p className="text-sm font-bold text-foreground">
-                    Auditoría del sistema
-                  </p>
+                  <p className="text-sm font-bold text-foreground">Auditoría del sistema</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     Todos los cambios se registran para garantizar la calidad.
                   </p>

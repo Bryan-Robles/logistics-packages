@@ -13,7 +13,9 @@ export function Field({ label, hint, error, children }: FieldProps) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className={`text-xs font-semibold ${error ? "text-destructive" : "text-foreground"}`}>
+        <Label
+          className={`text-xs font-semibold ${error ? "text-destructive" : "text-foreground"}`}
+        >
           {label}
         </Label>
         {hint}

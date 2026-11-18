@@ -38,7 +38,7 @@ export class NoveltyApiRepository implements NoveltyRepository {
       formData.append("tipoNovedad", NoveltyMapper.domainTypeToBackend(novelty.type));
       formData.append("observaciones", novelty.description || novelty.title);
       formData.append("usuarioId", novelty.reportedBy);
-      
+
       // Incluir el archivo de evidencia si está disponible
       if (novelty.evidenceFile) {
         formData.append("evidencia", novelty.evidenceFile);

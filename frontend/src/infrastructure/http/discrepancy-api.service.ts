@@ -37,7 +37,7 @@ export interface UpdatePhysicalDataResponseDTO {
 /**
  * Servicio HTTP para operaciones de discrepancia de paquetes.
  * MOD1-UC-004: Corregir discrepancia física
- * 
+ *
  * Endpoints:
  * - GET /api/paquetes/{id}
  * - POST /api/paquetes/{id}/discrepancia
@@ -47,15 +47,13 @@ export class DiscrepancyApiService {
 
   /**
    * Obtiene los detalles completos de un paquete incluyendo peso, dimensiones y datos del remitente
-   * 
+   *
    * @param paqueteId ID del paquete
    * @returns Detalles del paquete
    */
   static async getPackageDetails(paqueteId: string): Promise<PackageDetailsDTO> {
     try {
-      const response = await httpClient.get<PackageDetailsDTO>(
-        `${this.BASE_URL}/${paqueteId}`
-      );
+      const response = await httpClient.get<PackageDetailsDTO>(`${this.BASE_URL}/${paqueteId}`);
       return response.data;
     } catch (error) {
       const parsedError = parseApiError(error);
@@ -68,19 +66,19 @@ export class DiscrepancyApiService {
 
   /**
    * Actualiza los datos físicos (peso y dimensiones) de un paquete
-   * 
+   *
    * @param paqueteId ID del paquete
    * @param request Datos físicos a actualizar
    * @returns Confirmación de actualización
    */
   static async updatePhysicalData(
     paqueteId: string,
-    request: UpdatePhysicalDataRequestDTO
+    request: UpdatePhysicalDataRequestDTO,
   ): Promise<UpdatePhysicalDataResponseDTO> {
     try {
       const response = await httpClient.patch<UpdatePhysicalDataResponseDTO>(
         `${this.BASE_URL}/${paqueteId}/datos-fisicos`,
-        request
+        request,
       );
       return response.data;
     } catch (error) {

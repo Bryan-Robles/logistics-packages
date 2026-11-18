@@ -37,9 +37,9 @@ export function PriceBreakdownView({
   const tarifa_base = tarifaBase ?? TARIFA_BASE;
   const tarifa_por_kg = tarifaPorKg ?? TARIFA_POR_KG;
   const tarifa_por_km = tarifaPorKm ?? TARIFA_POR_KM;
-  
+
   const distancia = distanciaKm ?? 0;
-  
+
   let recargoMercancia = 0;
   if (tipoMercancia === MerchandiseType.FRAGILE) {
     recargoMercancia = RECARGO_FRAGIL;
@@ -51,13 +51,8 @@ export function PriceBreakdownView({
 
   const cargoPeso = billableWeight * tarifa_por_kg;
   const cargoDistancia = distancia * tarifa_por_km;
-  
-  const total =
-    tarifa_base +
-    cargoPeso +
-    cargoDistancia +
-    recargoMercancia +
-    recargoCategoria;
+
+  const total = tarifa_base + cargoPeso + cargoDistancia + recargoMercancia + recargoCategoria;
 
   // Si no hay precio real aún, mostrar desglose dinámico estimado
   if (precioEnvio === null || precioEnvio === undefined) {
@@ -71,8 +66,11 @@ export function PriceBreakdownView({
         </div>
 
         <div className="space-y-3 text-sm">
-          <PriceRow label="Tarifa Base (Envío Nacional)" value={`$${tarifa_base.toLocaleString()}`} />
-          
+          <PriceRow
+            label="Tarifa Base (Envío Nacional)"
+            value={`$${tarifa_base.toLocaleString()}`}
+          />
+
           {billableWeight > 0 && (
             <PriceRow
               label={`Cargo por Peso (${billableWeight.toFixed(2)} kg × $${tarifa_por_kg.toLocaleString()}/kg)`}
@@ -118,7 +116,8 @@ export function PriceBreakdownView({
           <div className="flex items-start gap-2">
             <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
             <p className="text-xs text-muted-foreground">
-              Precio estimado basado en datos locales. El precio final será confirmado por el backend al enviar el pesaje.
+              Precio estimado basado en datos locales. El precio final será confirmado por el
+              backend al enviar el pesaje.
             </p>
           </div>
         </div>
@@ -138,7 +137,7 @@ export function PriceBreakdownView({
 
       <div className="space-y-3 text-sm">
         <PriceRow label="Tarifa Base (Envío Nacional)" value={`$${tarifa_base.toLocaleString()}`} />
-        
+
         {billableWeight > 0 && (
           <PriceRow
             label={`Cargo por Peso (${billableWeight.toFixed(2)} kg × $${tarifa_por_kg.toLocaleString()}/kg)`}

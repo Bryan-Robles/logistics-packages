@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Control, UseFormSetValue, FieldErrors } from "react-hook-form";
+import type { AdmissionControl, AdmissionErrors, AdmissionSetValue } from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
@@ -29,9 +29,9 @@ const CIUDADES_COBERTURA = [
 ];
 
 interface RecipientFormProps {
-  control: Control<any>;
-  setValue: UseFormSetValue<any>;
-  errors?: FieldErrors<any>;
+  control: AdmissionControl;
+  setValue: AdmissionSetValue;
+  errors?: AdmissionErrors;
   touched?: any;
 }
 
@@ -43,7 +43,7 @@ function CiudadSelect({
 }: {
   value: string;
   onChange: (val: string) => void;
-  setValue: UseFormSetValue<any>;
+  setValue: AdmissionSetValue;
 }) {
   const handleCiudadChange = (ciudad: string) => {
     onChange(ciudad);
@@ -70,12 +70,7 @@ function CiudadSelect({
   );
 }
 
-export function RecipientForm({
-  control,
-  setValue,
-  errors,
-  touched,
-}: RecipientFormProps) {
+export function RecipientForm({ control, setValue, errors, touched }: RecipientFormProps) {
   return (
     <FormCard
       icon={<MapPin className="h-4 w-4" />}
@@ -99,8 +94,7 @@ export function RecipientForm({
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger
                   className={
-                    touched?.destinatario?.tipoDocumento &&
-                    errors?.destinatario?.tipoDocumento
+                    touched?.destinatario?.tipoDocumento && errors?.destinatario?.tipoDocumento
                       ? "border-destructive"
                       : ""
                   }
@@ -142,8 +136,7 @@ export function RecipientForm({
                 placeholder="Ej: 45678901"
                 {...field}
                 className={
-                  touched?.destinatario?.numeroDocumento &&
-                  errors?.destinatario?.numeroDocumento
+                  touched?.destinatario?.numeroDocumento && errors?.destinatario?.numeroDocumento
                     ? "border-destructive"
                     : ""
                 }
@@ -169,8 +162,7 @@ export function RecipientForm({
               placeholder="Nombre de quien recibe"
               {...field}
               className={
-                touched?.destinatario?.nombreCompleto &&
-                errors?.destinatario?.nombreCompleto
+                touched?.destinatario?.nombreCompleto && errors?.destinatario?.nombreCompleto
                   ? "border-destructive"
                   : ""
               }
@@ -182,9 +174,7 @@ export function RecipientForm({
         <Field
           label="Teléfono"
           error={
-            touched?.destinatario?.telefono
-              ? errors?.destinatario?.telefono?.message
-              : undefined
+            touched?.destinatario?.telefono ? errors?.destinatario?.telefono?.message : undefined
           }
         >
           <Controller
@@ -196,8 +186,7 @@ export function RecipientForm({
                 placeholder="312 654 3218"
                 {...field}
                 className={
-                  touched?.destinatario?.telefono &&
-                  errors?.destinatario?.telefono
+                  touched?.destinatario?.telefono && errors?.destinatario?.telefono
                     ? "border-destructive"
                     : ""
                 }
@@ -250,8 +239,7 @@ export function RecipientForm({
             render={({ field }) => (
               <Input
                 className={`pl-9 ${
-                  touched?.direccionDestino?.direccion &&
-                  errors?.direccionDestino?.direccion
+                  touched?.direccionDestino?.direccion && errors?.direccionDestino?.direccion
                     ? "border-destructive"
                     : ""
                 }`}
@@ -276,11 +264,7 @@ export function RecipientForm({
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <CiudadSelect
-                value={field.value}
-                onChange={field.onChange}
-                setValue={setValue}
-              />
+              <CiudadSelect value={field.value} onChange={field.onChange} setValue={setValue} />
             )}
           />
         </Field>
@@ -302,8 +286,7 @@ export function RecipientForm({
                 {...field}
                 disabled
                 className={`bg-muted cursor-not-allowed ${
-                  touched?.direccionDestino?.departamento &&
-                  errors?.direccionDestino?.departamento
+                  touched?.direccionDestino?.departamento && errors?.direccionDestino?.departamento
                     ? "border-destructive"
                     : ""
                 }`}

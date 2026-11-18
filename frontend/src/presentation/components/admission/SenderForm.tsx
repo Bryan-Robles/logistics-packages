@@ -7,15 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Control, FieldErrors } from "react-hook-form";
+import type { AdmissionControl, AdmissionErrors } from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
 import { DocumentType, DocumentTypeLabel } from "@/domain/enums/document-type.enum";
 
 interface SenderFormProps {
-  control: Control<any>;
-  errors?: FieldErrors<any>;
+  control: AdmissionControl;
+  errors?: AdmissionErrors;
   touched?: any;
 }
 
@@ -43,8 +43,7 @@ export function SenderForm({ control, errors, touched }: SenderFormProps) {
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger
                   className={
-                    touched?.remitente?.tipoDocumento &&
-                    errors?.remitente?.tipoDocumento
+                    touched?.remitente?.tipoDocumento && errors?.remitente?.tipoDocumento
                       ? "border-destructive"
                       : ""
                   }
@@ -86,8 +85,7 @@ export function SenderForm({ control, errors, touched }: SenderFormProps) {
                 placeholder="Ej: 70654321"
                 {...field}
                 className={
-                  touched?.remitente?.numeroDocumento &&
-                  errors?.remitente?.numeroDocumento
+                  touched?.remitente?.numeroDocumento && errors?.remitente?.numeroDocumento
                     ? "border-destructive"
                     : ""
                 }
@@ -113,8 +111,7 @@ export function SenderForm({ control, errors, touched }: SenderFormProps) {
               placeholder="Ingrese nombre completo"
               {...field}
               className={
-                touched?.remitente?.nombreCompleto &&
-                errors?.remitente?.nombreCompleto
+                touched?.remitente?.nombreCompleto && errors?.remitente?.nombreCompleto
                   ? "border-destructive"
                   : ""
               }
@@ -124,11 +121,7 @@ export function SenderForm({ control, errors, touched }: SenderFormProps) {
       </Field>
       <Field
         label="Teléfono"
-        error={
-          touched?.remitente?.telefono
-            ? errors?.remitente?.telefono?.message
-            : undefined
-        }
+        error={touched?.remitente?.telefono ? errors?.remitente?.telefono?.message : undefined}
       >
         <div className="relative">
           <Phone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

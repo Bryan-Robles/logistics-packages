@@ -7,23 +7,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Control, FieldErrors } from "react-hook-form";
+import type { AdmissionControl, AdmissionErrors } from "./form-types";
 import { Controller } from "react-hook-form";
 import { FormCard } from "../shared/FormCard";
 import { Field } from "../shared/Field";
 import { PaymentMethod, PaymentMethodLabel } from "@/domain/enums/payment-method.enum";
 
 interface ShippingInfoSectionProps {
-  control: Control<any>;
-  errors?: FieldErrors<any>;
+  control: AdmissionControl;
+  errors?: AdmissionErrors;
   touched?: any;
 }
 
-export function ShippingInfoSection({
-  control,
-  errors,
-  touched,
-}: ShippingInfoSectionProps) {
+export function ShippingInfoSection({ control, errors, touched }: ShippingInfoSectionProps) {
   return (
     <FormCard
       icon={<Truck className="h-4 w-4" />}
@@ -56,9 +52,7 @@ export function ShippingInfoSection({
             render={({ field }) => (
               <Input
                 className={`pl-7 ${
-                  touched?.valorDeclarado && errors?.valorDeclarado
-                    ? "border-destructive"
-                    : ""
+                  touched?.valorDeclarado && errors?.valorDeclarado ? "border-destructive" : ""
                 }`}
                 placeholder="1000"
                 type="number"
@@ -89,11 +83,7 @@ export function ShippingInfoSection({
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger
-                className={
-                  touched?.metodoPago && errors?.metodoPago
-                    ? "border-destructive"
-                    : ""
-                }
+                className={touched?.metodoPago && errors?.metodoPago ? "border-destructive" : ""}
               >
                 <SelectValue />
               </SelectTrigger>
