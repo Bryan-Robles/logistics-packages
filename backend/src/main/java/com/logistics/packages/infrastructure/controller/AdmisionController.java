@@ -51,6 +51,7 @@ public class AdmisionController {
     private final PaqueteRepository paqueteRepository;
     private final HistorialEstadoRepository historialEstadoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final com.logistics.packages.application.usecase.ActualizarCoordenadasUseCase actualizarCoordenadasUseCase;
 
     @Operation(summary = "Registrar admisión de paquete", description = "Registra un nuevo paquete en el sistema con datos del remitente, destinatario, tipo de mercancía y método de pago. Retorna el ID asignado al paquete")
     @ApiResponse(responseCode = "200", description = "Paquete registrado exitosamente")
@@ -181,17 +182,14 @@ public class AdmisionController {
             @PathVariable UUID paqueteId,
             @Valid @RequestBody CoordenadasUpdateRequest request) {
         
-        Paquete paquete = paqueteRepository.findById(paqueteId)
-                .orElseThrow(() -> new com.logistics.packages.domain.exception.PaqueteNotFoundException(paqueteId));
-        
-        // Crear y asignar las nuevas coordenadas (validaciones del VO se aplican automáticamente)
+        // Crear las nuevas coordenadas (validaciones del VO se aplican automáticamente)
         com.logistics.packages.domain.valueobject.Coordenadas nuevasCoordenadas = 
                 new com.logistics.packages.domain.valueobject.Coordenadas(
                         request.getLatitud(), 
                         request.getLongitud());
         
-        paquete.asignarCoordenadas(nuevasCoordenadas);
-        paqueteRepository.save(paquete);
+        // Resuelve el GPS y recalcula la distancia desde la sede (FR-009)
+        Paquete paquete = actualizarCoordenadasUseCase.actualizar(paqueteId, nuevasCoordenadas);
         
         return ResponseEntity.ok(Map.of(
                 "mensaje", "Coordenadas actualizadas correctamente",

@@ -98,24 +98,17 @@ class SolicitarRutaUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe enviar paquete incluso con datos opcionales nulos")
-    void debeEnviarPaqueteConDatosOpcionalesNulos() {
-        Paquete paqueteMinimo = Paquete.builder()
+    @DisplayName("No solicita ruta mientras el paquete no tenga coordenadas (GPS pendiente)")
+    void noSolicitaRutaSinCoordenadas() {
+        Paquete paqueteSinCoordenadas = Paquete.builder()
                 .id(paqueteId)
                 .estado(EstadoPaquete.RECIBIDO_EN_SEDE)
                 .build();
 
-        when(paqueteRepository.findById(paqueteId)).thenReturn(Optional.of(paqueteMinimo));
+        when(paqueteRepository.findById(paqueteId)).thenReturn(Optional.of(paqueteSinCoordenadas));
 
-        SolicitudRutaEvent event = SolicitudRutaEvent.of(paqueteId);
-        solicitarRutaUseCase.handle(event);
+        solicitarRutaUseCase.handle(SolicitudRutaEvent.of(paqueteId));
 
-        ArgumentCaptor<Paquete> paqueteCaptor = ArgumentCaptor.forClass(Paquete.class);
-        verify(rutaQueuePort).enviarSolicitud(paqueteCaptor.capture());
-
-        Paquete enviado = paqueteCaptor.getValue();
-        assertEquals(paqueteId, enviado.getId());
-        assertNull(enviado.getPeso());
-        assertNull(enviado.getCoordenadas());
+        verify(rutaQueuePort, never()).enviarSolicitud(any());
     }
 }

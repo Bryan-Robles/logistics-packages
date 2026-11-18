@@ -149,6 +149,14 @@ public class Paquete {
         this.estadoGps = EstadoGps.RESUELTO;
     }
 
+    /** Distancia sede → destino, usada luego en el cálculo del precio de envío. */
+    public void asignarDistanciaEstimada(double distanciaKm) {
+        if (distanciaKm < 0) {
+            throw new IllegalArgumentException("La distancia estimada no puede ser negativa.");
+        }
+        this.distanciaEstimadaKm = distanciaKm;
+    }
+
     public void asignarPrecio(BigDecimal precio) {
         this.precioEnvio = new PrecioEnvio(precio);
     }
