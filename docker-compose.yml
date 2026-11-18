@@ -1,0 +1,20 @@
+# Levanta la aplicación completa: PostgreSQL, LocalStack (SQS/S3), backend y frontend.
+#   cp backend/.env.example backend/.env
+#   docker compose up --build
+# Frontend: http://localhost:3000 · API: http://localhost:8080 · Swagger: http://localhost:8080/swagger-ui.html
+include:
+  - path: backend/docker-compose.yml
+    env_file: backend/.env
+
+services:
+  frontend:
+    build:
+      context: frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_started

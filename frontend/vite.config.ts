@@ -7,7 +7,12 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  server: {
-    port: 3000,
+  vite: {
+    server: {
+      port: 3000,
+    },
   },
+  // Default build targets Cloudflare Workers. BUILD_TARGET=node produces a Node server
+  // (dist/server/server.js) that `vite preview` can serve, used by the Docker image.
+  ...(process.env.BUILD_TARGET === "node" ? { cloudflare: false as const } : {}),
 });
