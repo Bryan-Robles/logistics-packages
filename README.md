@@ -109,12 +109,23 @@ Los cambios entran por ramas y Pull Requests hacia `main`, que está protegida y
 
 ## Mi aporte
 
-<!-- BORRADOR: revisar y ajustar con tu propia experiencia antes de publicar -->
+Participé en el proyecto de punta a punta, desde la especificación hasta la integración:
 
-- **Análisis y especificación:** redacción de los casos de uso UC-001 a UC-003 y del diagrama de casos de uso.
-- **Backend:** plan de ejecución e implementación del pesaje (UC-002), configuración de Testcontainers y Docker Compose, corrección de errores en la admisión y el pesaje, DTO de personas y adaptador SQS para clasificación.
-- **Frontend:** scaffolding inicial, alineación de la maqueta con las especificaciones, e integración con la API real de los flujos de admisión → pesaje, almacenaje → clasificación y discrepancias, además del flujo completo de novedades (UC-007).
-- **Después de la entrega:** consolidación en este monorepo, limpieza del historial (credenciales y artefactos), estabilización (tests en verde, tipado estricto sin `any`, bugs de integración), Docker Compose de un solo comando y CI.
+- **Análisis y especificación:** casos de uso UC-001 a UC-003 (admisión, pesaje y solicitud de ruta) y diagrama de casos de uso.
+- **Backend:**
+  - plan de ejecución e implementación del pesaje y dimensiones (UC-002);
+  - configuración de Testcontainers y Docker Compose;
+  - corrección de errores en la admisión y el pesaje;
+  - DTO de personas y adaptador SQS para la clasificación.
+- **Frontend:**
+  - estructura inicial del proyecto y alineación de la maqueta con las especificaciones;
+  - integración con la API real de los flujos de admisión → pesaje y almacenaje → clasificación;
+  - flujo de discrepancias físicas;
+  - flujo completo de reporte y control de novedades (UC-007).
+- **Después de la entrega:**
+  - consolidé ambos repositorios en este monorepo y limpié el historial de credenciales y binarios;
+  - estabilicé el proyecto: suite de tests en verde, tipado estricto y corrección de bugs de integración entre frontend y backend;
+  - agregué Docker Compose de un solo comando, integración continua y la documentación.
 
 ## Equipo
 
